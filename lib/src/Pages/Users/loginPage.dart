@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'Widget/bezierContainer.dart';
+import 'package:flutter_login_signup/src/Widget/bezierContainer.dart';
+
 
 class LoginPage extends StatefulWidget {
   	LoginPage({Key key, this.title}) : super(key: key);
