@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_login_signup/src/models/user_model.dart';
 import 'package:flutter_login_signup/src/preferences/preferences.dart';
 import 'package:flutter_login_signup/src/providers/server_provider.dart';
 import 'package:http/http.dart' as http;
@@ -16,14 +17,20 @@ class UserProvider {
             String body = utf8.decode(response.bodyBytes);
 			final decodedData = json.decode(body);
 
+			
 			if (response.statusCode == 200){
 				//save token to preferences
-				Preferences preferences = new Preferences();
-				preferences.token       = decodedData['token'];
-				preferences.userId      = decodedData['username'];
+				//Preferences preferences = new Preferences();
+				//preferences.token       = decodedData['token'];
+				//preferences.userId      = decodedData['username'];
+				UserModel.currentUser.id = decodedData['username'];
+				UserModel.currentUser.token = decodedData['token'];
 				return { 'ok': true };
 			} else { return { 'ok': false }; }	
-		} catch (exception){ return { 'ok': false }; }
+		} catch (exception){ 
+			print(exception);
+			return { 'ok': false }; 
+		}
 	}
 }
 
