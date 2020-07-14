@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login_signup/src/pages/users/login_page.dart';
+import 'package:flutter_login_signup/src/routes/routes.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
       		),
       		debugShowCheckedModeBanner: false,
       		home: LoginPage(),
+			routes: ApplicationRoutes.getApplicationRoutes(),
 		);
 	}
 }
