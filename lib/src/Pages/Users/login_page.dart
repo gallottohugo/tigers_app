@@ -1,6 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_login_signup/src/Providers/users_provider.dart';
-import 'package:flutter_login_signup/src/Widget/bezierContainer.dart';
+import 'package:flutter_login_signup/src/widgets/bezierContainer.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -14,11 +16,67 @@ class _LoginPageState extends State<LoginPage> {
 	final formKey = GlobalKey<FormState>();
 	String currentUser = "";
 	String currentPassword = "";
+	bool showLoading = false;
 
-  	
-  	
 
-  	Widget _submitButton() {
+  	@override
+  	Widget build(BuildContext context) {
+    	final height = MediaQuery.of(context).size.height;
+		return Scaffold(
+        	body: Container(
+      			height: height,
+      			child: Stack(
+        			children: <Widget>[
+          				Positioned(
+              				top: -height * .15,
+              				right: -MediaQuery.of(context).size.width * .4,
+              				child: BezierContainer()),
+          					Container(
+            					padding: EdgeInsets.symmetric(horizontal: 20),
+            					child: SingleChildScrollView(
+              					child: Column(
+                					crossAxisAlignment: CrossAxisAlignment.center,
+                					mainAxisAlignment: MainAxisAlignment.center,
+                					children: <Widget>[
+										SizedBox(height: height * .2),
+										SizedBox(height: 80),
+										_emailPasswordWidget(),
+										SizedBox(height: 20),
+										_submitButton(),
+										Container(
+											padding: EdgeInsets.symmetric(vertical: 10),
+											alignment: Alignment.centerRight,
+											child: Text('¿Perdió su contraseña?', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+										),
+                					],
+              					),
+							),
+          				),
+						showLoading == true ?
+				  			AbsorbPointer(
+				  				child: BackdropFilter(
+				  					filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+				  					child: Container(
+				  						padding: EdgeInsets.only(top: 20),
+				  						child: Center(
+											  child: CircularProgressIndicator(
+												backgroundColor: Colors.transparent,
+												valueColor: new AlwaysStoppedAnimation<Color>(Color(0xffe46b10)),
+											)
+										)
+				  					)
+				  				)
+				  			)
+				  		: Container()
+        			],
+      			),
+    		)
+		);
+  	}
+
+
+
+	  Widget _submitButton() {
     	return GestureDetector(
 			child: Container(
 				width: MediaQuery.of(context).size.width,
@@ -43,9 +101,17 @@ class _LoginPageState extends State<LoginPage> {
 				),
     	  	),
 			onTap: () async {
+				setState(() { showLoading = true; });
 				formKey.currentState.save();
 				UserProvider userProvider = UserProvider();
-				var response = userProvider.login(user: currentUser, password: currentPassword);
+				Map<String, dynamic> response = await userProvider.login(user: currentUser, password: currentPassword);
+				setState(() { showLoading = false; });
+				if (response["ok"] == true){
+
+				} else {
+
+				}
+				
 			},
     	);
   	}
@@ -103,50 +169,5 @@ class _LoginPageState extends State<LoginPage> {
       			],
 			)
     	);
-  	}
-
-
-	void _onSavedUser(String value){ }
-	void _onSavedPassword(String value){ currentPassword = value;}
-
-
-  
-  	@override
-  	Widget build(BuildContext context) {
-    	final height = MediaQuery.of(context).size.height;
-		return Scaffold(
-        	body: Container(
-      			height: height,
-      			child: Stack(
-        			children: <Widget>[
-          				Positioned(
-              				top: -height * .15,
-              				right: -MediaQuery.of(context).size.width * .4,
-              				child: BezierContainer()),
-          					Container(
-            					padding: EdgeInsets.symmetric(horizontal: 20),
-            					child: SingleChildScrollView(
-              					child: Column(
-                					crossAxisAlignment: CrossAxisAlignment.center,
-                					mainAxisAlignment: MainAxisAlignment.center,
-                					children: <Widget>[
-										SizedBox(height: height * .2),
-										SizedBox(height: 50),
-										_emailPasswordWidget(),
-										SizedBox(height: 20),
-										_submitButton(),
-										Container(
-											padding: EdgeInsets.symmetric(vertical: 10),
-											alignment: Alignment.centerRight,
-											child: Text('¿Perdió su contraseña?', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-										),
-                					],
-              					),
-							),
-          				),
-        			],
-      			),
-    		)
-		);
   	}
 }
