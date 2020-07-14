@@ -1,13 +1,14 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_login_signup/src/Providers/users_provider.dart';
+import 'package:flutter_login_signup/src/pages/home/home_page.dart';
+import 'package:flutter_login_signup/src/widgets/alert_widgets.dart';
 import 'package:flutter_login_signup/src/widgets/bezierContainer.dart';
 
 
 class LoginPage extends StatefulWidget {
-	final String title;
-	LoginPage({Key key, this.title}) : super(key: key);
+	static final String routeName = 'login_page';
+	LoginPage({Key key}) : super(key: key);
   	@override
   	_LoginPageState createState() => _LoginPageState();
 }
@@ -30,14 +31,15 @@ class _LoginPageState extends State<LoginPage> {
           				Positioned(
               				top: -height * .15,
               				right: -MediaQuery.of(context).size.width * .4,
-              				child: BezierContainer()),
-          					Container(
-            					padding: EdgeInsets.symmetric(horizontal: 20),
-            					child: SingleChildScrollView(
-              					child: Column(
-                					crossAxisAlignment: CrossAxisAlignment.center,
-                					mainAxisAlignment: MainAxisAlignment.center,
-                					children: <Widget>[
+              				child: BezierContainer()
+						),
+						Container(
+							padding: EdgeInsets.symmetric(horizontal: 20),
+							child: SingleChildScrollView(
+								child: Column(
+									crossAxisAlignment: CrossAxisAlignment.center,
+									mainAxisAlignment: MainAxisAlignment.center,
+									children: <Widget>[
 										SizedBox(height: height * .2),
 										SizedBox(height: 80),
 										_emailPasswordWidget(),
@@ -48,35 +50,31 @@ class _LoginPageState extends State<LoginPage> {
 											alignment: Alignment.centerRight,
 											child: Text('¿Perdió su contraseña?', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
 										),
-                					],
-              					),
+									],
+								),
 							),
-          				),
-						showLoading == true ?
-				  			AbsorbPointer(
-				  				child: BackdropFilter(
-				  					filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-				  					child: Container(
-				  						padding: EdgeInsets.only(top: 20),
-				  						child: Center(
-											  child: CircularProgressIndicator(
-												backgroundColor: Colors.transparent,
-												valueColor: new AlwaysStoppedAnimation<Color>(Color(0xffe46b10)),
-											)
+						),
+						showLoading == true ? AbsorbPointer(
+							child: BackdropFilter(
+								filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+								child: Container(
+									padding: EdgeInsets.only(top: 20),
+									child: Center(
+											child: CircularProgressIndicator(
+											backgroundColor: Colors.transparent,
+											valueColor: new AlwaysStoppedAnimation<Color>(Color(0xffe46b10)),
 										)
-				  					)
-				  				)
-				  			)
-				  		: Container()
-        			],
-      			),
-    		)
+									)
+								)
+							)
+						) : Container()
+					],
+				),
+			)
 		);
-  	}
+	}
 
-
-
-	  Widget _submitButton() {
+	Widget _submitButton() {
     	return GestureDetector(
 			child: Container(
 				width: MediaQuery.of(context).size.width,
@@ -107,15 +105,17 @@ class _LoginPageState extends State<LoginPage> {
 				Map<String, dynamic> response = await userProvider.login(user: currentUser, password: currentPassword);
 				setState(() { showLoading = false; });
 				if (response["ok"] == true){
-
+					Navigator.pushNamed(context, HomePage.routeName);
 				} else {
-
+					AlertWidgets.alertOkWidget(context, 'Error', 'Ocurrió un error, vuelva a intentarlo!', Icon(Icons.error));
 				}
 				
 			},
     	);
   	}
 
+
+	
   
 
   	Widget _emailPasswordWidget() {
