@@ -4,15 +4,56 @@ import 'package:flutter_login_signup/src/pages/users/login_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SignUpPage extends StatefulWidget {
-  SignUpPage({Key key, this.title}) : super(key: key);
+	static final String routeName = 'signup_page';
+  	SignUpPage({Key key, this.title}) : super(key: key);
 
-  final String title;
+  	final String title;
 
-  @override
-  _SignUpPageState createState() => _SignUpPageState();
+  	@override
+  	_SignUpPageState createState() => _SignUpPageState();
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+	@override
+  	Widget build(BuildContext context) {
+    	final height = MediaQuery.of(context).size.height;
+		return Scaffold(
+      		body: Container(
+        		height: height,
+        		child: Stack(
+          			children: <Widget>[
+            			Positioned(
+              				top: -MediaQuery.of(context).size.height * .15,
+              				right: -MediaQuery.of(context).size.width * .4,
+              				child: BezierContainer(),
+            			),
+            			Container(
+              				padding: EdgeInsets.symmetric(horizontal: 20),
+              				child: SingleChildScrollView(
+                				child: Column(
+                  					crossAxisAlignment: CrossAxisAlignment.center,
+                  					mainAxisAlignment: MainAxisAlignment.center,
+                  					children: <Widget>[
+                    					SizedBox(height: height * .2),
+                    					_title(),
+                    					SizedBox(height: 50,),
+                    					_emailPasswordWidget(),
+                    					SizedBox(height: 20,),
+                    					_submitButton(),
+                    					SizedBox(height: height * .14),
+                    					_loginAccountLabel(),
+                  					],
+                				),
+              				),
+            			),
+            			Positioned(top: 40, left: 0, child: _backButton()),
+          			],
+        		),
+      		),
+    	);
+  	}
+
+	  
   Widget _backButton() {
     return InkWell(
       onTap: () {
@@ -150,46 +191,5 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      body: Container(
-        height: height,
-        child: Stack(
-          children: <Widget>[
-            Positioned(
-              top: -MediaQuery.of(context).size.height * .15,
-              right: -MediaQuery.of(context).size.width * .4,
-              child: BezierContainer(),
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: height * .2),
-                    _title(),
-                    SizedBox(
-                      height: 50,
-                    ),
-                    _emailPasswordWidget(),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    _submitButton(),
-                    SizedBox(height: height * .14),
-                    _loginAccountLabel(),
-                  ],
-                ),
-              ),
-            ),
-            Positioned(top: 40, left: 0, child: _backButton()),
-          ],
-        ),
-      ),
-    );
-  }
+  
 }
