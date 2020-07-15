@@ -1,18 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_login_signup/src/pages/users/login_page.dart';
+import 'package:flutter_login_signup/src/models/user_model.dart';
+import 'package:flutter_login_signup/src/pages/home/home_page.dart';
+import 'package:flutter_login_signup/src/pages/users/users_login_page.dart';
+import 'package:flutter_login_signup/src/preferences/preferences.dart';
 import 'package:flutter_login_signup/src/routes/routes.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 
-void main() => runApp(MyApp());
+void main() async {
+	WidgetsFlutterBinding.ensureInitialized();
+	final preferences = new Preferences();
+	await preferences.initPreferences();
+
+	bool signin;
+	if (preferences.token == '') { 
+		signin = false; 
+	} else {
+		signin = true;
+		UserModel.setCurrentUserValues();
+	}
+	runApp(MyApp(signIn: signin,));
+}
 
 class MyApp extends StatelessWidget {
-  	// This widget is the root of your application.
+  	final bool signIn;
+	MyApp({@required this.signIn});
+
   	@override
   	Widget build(BuildContext context) {
+		  
     	final textTheme = Theme.of(context).textTheme;
     	return MaterialApp(
-      		title: 'Flutter Demo',
+      		title: 'Grupo Tigre',
       		theme: ThemeData(
          		primarySwatch: Colors.blue,
          		textTheme:GoogleFonts.latoTextTheme(textTheme).copyWith(
@@ -20,7 +39,7 @@ class MyApp extends StatelessWidget {
          		),
       		),
       		debugShowCheckedModeBanner: false,
-      		home: LoginPage(),
+      		home: this.signIn ? HomePage() : UsersLoginPage(),
 			routes: ApplicationRoutes.getApplicationRoutes(),
 		);
 	}
