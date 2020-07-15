@@ -3,17 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_login_signup/src/Providers/users_provider.dart';
 import 'package:flutter_login_signup/src/pages/home/home_page.dart';
 import 'package:flutter_login_signup/src/widgets/alert_widgets.dart';
+import 'package:flutter_login_signup/src/widgets/app_bar_widget.dart';
 import 'package:flutter_login_signup/src/widgets/bezierContainer.dart';
 
 
-class LoginPage extends StatefulWidget {
+class UsersLoginPage extends StatefulWidget {
 	static final String routeName = 'login_page';
-	LoginPage({Key key}) : super(key: key);
+	UsersLoginPage({Key key}) : super(key: key);
   	@override
-  	_LoginPageState createState() => _LoginPageState();
+  	_UsersLoginPageState createState() => _UsersLoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _UsersLoginPageState extends State<UsersLoginPage> {
 	final formKey = GlobalKey<FormState>();
 	String currentUser = "";
 	String currentPassword = "";
@@ -23,54 +24,66 @@ class _LoginPageState extends State<LoginPage> {
   	@override
   	Widget build(BuildContext context) {
     	final height = MediaQuery.of(context).size.height;
-		return Scaffold(
-        	body: Container(
-      			height: height,
-      			child: Stack(
-        			children: <Widget>[
-          				Positioned(
-              				top: -height * .15,
-              				right: -MediaQuery.of(context).size.width * .4,
-              				child: BezierContainer()
-						),
-						Container(
-							padding: EdgeInsets.symmetric(horizontal: 20),
-							child: SingleChildScrollView(
-								child: Column(
-									crossAxisAlignment: CrossAxisAlignment.center,
-									mainAxisAlignment: MainAxisAlignment.center,
-									children: <Widget>[
-										SizedBox(height: height * .2),
-										SizedBox(height: 80),
-										_emailPasswordWidget(),
-										SizedBox(height: 20),
-										_submitButton(),
-										Container(
-											padding: EdgeInsets.symmetric(vertical: 10),
-											alignment: Alignment.centerRight,
-											child: Text('¿Perdió su contraseña?', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-										),
-									],
+		return WillPopScope(
+    		onWillPop: () async => false,
+    		child: Scaffold(
+				appBar: _appBarTiger(),
+				body: Container(
+					height: height,
+					child: Stack(
+						children: <Widget>[
+							Positioned(
+								top: -height * .15,
+								right: -MediaQuery.of(context).size.width * .4,
+								child: BezierContainer()
+							),
+							Container(
+								padding: EdgeInsets.symmetric(horizontal: 20),
+								child: SingleChildScrollView(
+									child: Column(
+										crossAxisAlignment: CrossAxisAlignment.center,
+										mainAxisAlignment: MainAxisAlignment.center,
+										children: <Widget>[
+											SizedBox(height: height * .2),
+											SizedBox(height: 80),
+											_emailPasswordWidget(),
+											SizedBox(height: 20),
+											_submitButton(),
+											Container(
+												padding: EdgeInsets.symmetric(vertical: 10),
+												alignment: Alignment.centerRight,
+												child: Text('¿Perdió su contraseña?', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+											),
+										],
+									),
 								),
 							),
-						),
-						showLoading == true ? AbsorbPointer(
-							child: BackdropFilter(
-								filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-								child: Container(
-									padding: EdgeInsets.only(top: 20),
-									child: Center(
-											child: CircularProgressIndicator(
-											backgroundColor: Colors.transparent,
-											valueColor: new AlwaysStoppedAnimation<Color>(Color(0xffe46b10)),
+							showLoading == true ? AbsorbPointer(
+								child: BackdropFilter(
+									filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+									child: Container(
+										padding: EdgeInsets.only(top: 20),
+										child: Center(
+												child: CircularProgressIndicator(
+												backgroundColor: Colors.transparent,
+												valueColor: new AlwaysStoppedAnimation<Color>(Color(0xffe46b10)),
+											)
 										)
 									)
 								)
-							)
-						) : Container()
-					],
-				),
+							) : Container()
+						],
+					),
+				)
 			)
+		);
+	}
+
+
+	Widget _appBarTiger(){
+		return PreferredSize(
+			preferredSize: Size.fromHeight(60.0), // here the desired height
+			child: AppBarTiger(title: 'Grupo Tigre', leading: Container(),)
 		);
 	}
 
@@ -102,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
 				setState(() { showLoading = true; });
 				formKey.currentState.save();
 				UserProvider userProvider = UserProvider();
-				Map<String, dynamic> response = await userProvider.login(user: currentUser, password: currentPassword);
+				Map<String, dynamic> response = await userProvider.usersLogin(user: currentUser, password: currentPassword);
 				setState(() { showLoading = false; });
 				if (response["ok"] == true){
 					Navigator.pushNamed(context, HomePage.routeName);
@@ -133,14 +146,8 @@ class _LoginPageState extends State<LoginPage> {
 
 								TextFormField(
 									obscureText: false,
-									decoration: InputDecoration(
-										border: InputBorder.none,
-										fillColor: Color(0xfff3f3f4),
-										filled: true
-									),
-									onSaved: (String value){
-										currentUser= value;
-									},
+									decoration: InputDecoration( border: InputBorder.none, fillColor: Color(0xfff3f3f4), filled: true ),
+									onSaved: (String value){ currentUser = value; },
 								)
 							],
 						),
