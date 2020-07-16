@@ -1,8 +1,6 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_login_signup/src/models/user_model.dart';
-import 'package:flutter_login_signup/src/pages/users/users_houses_page.dart';
 import 'package:flutter_login_signup/src/providers/users_provider.dart';
 import 'package:flutter_login_signup/src/widgets/alert_widgets.dart';
 import 'package:flutter_login_signup/src/widgets/app_bar_widget.dart';
@@ -30,6 +28,9 @@ class _UsersCreatePageState extends State<UsersCreatePage> {
 
 		Map<String, dynamic> mapsArgument = ModalRoute.of(context).settings.arguments;
 		newUser.userType = mapsArgument['user_type'];
+		if (newUser.userType == 'customer'){
+			dropdownValue = newUser.userType;
+		}
 
 
     	final height = MediaQuery.of(context).size.height;
@@ -92,7 +93,7 @@ class _UsersCreatePageState extends State<UsersCreatePage> {
 	  
   
 
-  	Widget _entryField(String title, {@required  String initialValue, @required bool enabled, @required Function onSaved, @required TextInputType textInputType  }) {
+  	Widget _entryField(String title, {@required  String initialValue, @required bool enabled, Function onSaved, @required TextInputType textInputType  }) {
     	return Container(
       		margin: EdgeInsets.symmetric(vertical: 10),
       		child: Column(
@@ -144,14 +145,15 @@ class _UsersCreatePageState extends State<UsersCreatePage> {
 				setState(() { showLoading = true; });
 				formKey.currentState.save();
 				UserProvider userProvider = UserProvider();
+				newUser.userType = dropdownValue;
 				Map<String, dynamic> response = await userProvider.usersSignup(user: newUser);
 				setState(() { showLoading = false; });
-				if (response["ok"] == true){
+				if (response["ok"] == true) {
 					if (newUser.userType == 'customer'){
-						//Navigator.pushNamed(context, UsersHousesPage.routeName, arguments: { 'customer': newUser });
 						Navigator.pop(context);
 					} else {
-						AlertWidgets.alertOkWidget(context, 'Usuario creado', 'El usuario se creó correctamente', Icon(Icons.check_circle));
+						await AlertWidgets.alertOkWidget(context, 'Usuario creado', 'El usuario se creó correctamente', Icon(Icons.check_circle));
+						Navigator.pop(context);
 					}
 					
 				} else {
@@ -162,7 +164,7 @@ class _UsersCreatePageState extends State<UsersCreatePage> {
     	);
 	}
 
-	Widget _dropDownField({@required Function onSaved}) {
+	Widget _dropDownField() {
 		return Container(
       		margin: EdgeInsets.symmetric(vertical: 10),
       		child: Column(
@@ -178,7 +180,7 @@ class _UsersCreatePageState extends State<UsersCreatePage> {
 						onChanged: (String newValue) { 
 							setState(() { 
 								dropdownValue = newValue;
-								onSaved(dropdownValue);
+								newUser.userType = newValue;
 							}); 
 						},
 						items: <String>['Administrador', 'Coordinador', 'Empleado'].map<DropdownMenuItem<String>>((String value) {
@@ -198,7 +200,6 @@ class _UsersCreatePageState extends State<UsersCreatePage> {
 	void _onSavedLastName(String value){ newUser.lastName = value; }
 	void _onSavedEmail(String value){ newUser.email = value; }
 	void _onSavedPhone(String value){ newUser.phone = value; }
-	void _onSavedUserType(String value){ newUser.userType = value; }
 
 	
 
@@ -215,7 +216,7 @@ class _UsersCreatePageState extends State<UsersCreatePage> {
 					SizedBox(height: 10,),
 					_entryField("Teléfono", onSaved: _onSavedPhone, enabled: true, initialValue: '', textInputType: TextInputType.phone),
 					SizedBox(height: 10,),
-					newUser.userType == 'customer' ? _entryField("Tipo de usuario", onSaved: _onSavedUserType, enabled: false, initialValue: 'Cliente', textInputType: TextInputType.text) : _dropDownField(onSaved: _onSavedUserType) ,
+					newUser.userType == 'customer' ? _entryField("Tipo de usuario", enabled: false, initialValue: 'Cliente', textInputType: TextInputType.text) : _dropDownField() ,
 				],
 			)
     	);
