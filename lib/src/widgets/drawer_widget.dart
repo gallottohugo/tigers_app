@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login_signup/src/models/user_model.dart';
-import 'package:flutter_login_signup/src/pages/users/users_customers_list.dart';
+import 'package:flutter_login_signup/src/pages/districts/districts_list_page.dart';
+import 'package:flutter_login_signup/src/pages/users/users_customers_list_page.dart';
 import 'package:flutter_login_signup/src/pages/users/users_list_page.dart';
 import 'package:flutter_login_signup/src/pages/users/users_login_page.dart';
 import 'package:flutter_login_signup/src/preferences/preferences.dart';
@@ -57,6 +58,24 @@ class _DrawerWidgetState extends State<DrawerWidget> {
 							},
 						) : Container(),
 						UserModel.currentUser.coordinator() == true ? Divider(color: Color(0xfff7892b),) : Container(),
+
+						UserModel.currentUser.coordinator() == true ? ListTile(
+							leading: Container(width: 50.0, child: Icon(Icons.place, color: Color(0xfff7892b),)),
+							trailing: Icon(Icons.navigate_next, color: Color(0xfff7892b),),
+							title: Text('Consignas'),
+							onTap: (){	
+								Navigator.pushNamed(context, DistrictsListPage.routeName);
+							},
+						) : Container(),
+						UserModel.currentUser.coordinator() == true ? Divider(color: Color(0xfff7892b),) : Container(),
+
+						ListTile(
+							leading: Container(width: 50.0, child: Icon(Icons.work, color: Color(0xfff7892b),)),
+							trailing: Icon(Icons.navigate_next, color: Color(0xfff7892b)),
+							title: Text('Guardias'),
+							onTap: (){ },
+						),
+						Divider(color: Color(0xfff7892b)),
 						
 						ListTile(
 							leading: Container(width: 50.0, child: Icon(Icons.close, color: Color(0xfff7892b),)),
