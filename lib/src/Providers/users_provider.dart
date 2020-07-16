@@ -39,7 +39,6 @@ class UserProvider {
 		try{
 			String admin = "false";
 			if (user.userType == 'Administrador'){ admin = "true"; }
-			
 			final url = '${ ServerProvider.server }/v1/users';
 			Map<String, dynamic> params = {
 				'name': user.name,
