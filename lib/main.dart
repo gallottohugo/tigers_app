@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_login_signup/src/models/user_model.dart';
 import 'package:flutter_login_signup/src/pages/home/home_page.dart';
 import 'package:flutter_login_signup/src/pages/users/users_login_page.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
   	Widget build(BuildContext context) {
 		  
     	final textTheme = Theme.of(context).textTheme;
+		SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Color(0xffe46b10),));
     	return MaterialApp(
       		title: 'Grupo Tigre',
       		theme: ThemeData(
