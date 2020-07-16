@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AlertWidgets {
-  	static void alertOkWidget(BuildContext context, String title, String description, Icon icon){
-		showDialog(
+  	static Future<void> alertOkWidget(BuildContext context, String title, String description, Icon icon){
+		return showDialog(
 			context: context,
 			barrierDismissible: true,
 			builder: (context){
