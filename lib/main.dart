@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_login_signup/src/models/user_model.dart';
 import 'package:flutter_login_signup/src/pages/home/home_page.dart';
 import 'package:flutter_login_signup/src/pages/users/users_login_page.dart';
@@ -43,6 +44,8 @@ class MyApp extends StatelessWidget {
       		debugShowCheckedModeBanner: false,
       		home: this.signIn ? HomePage() : UsersLoginPage(),
 			routes: ApplicationRoutes.getApplicationRoutes(),
+			localizationsDelegates: [ GlobalMaterialLocalizations.delegate ],
+			supportedLocales: [ const Locale('en','US'), const Locale('es','ES'),],
 		);
 	}
 }
