@@ -1,12 +1,12 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_login_signup/src/models/district_model.dart';
 import 'package:flutter_login_signup/src/pages/districts/districts_create_page.dart';
 import 'package:flutter_login_signup/src/providers/districts_provider.dart';
 import 'package:flutter_login_signup/src/widgets/app_bar_widget.dart';
 import 'package:flutter_login_signup/src/widgets/bezierContainer.dart';
-import 'package:flutter_login_signup/src/widgets/button_widget.dart';
+import 'package:flutter_login_signup/src/widgets/button_floating_widget.dart';
+import 'package:flutter_login_signup/src/widgets/progress_indicator_widget.dart';
 
 class DistrictsListPage extends StatefulWidget {
 	static final String routeName = 'district_list_page';
@@ -17,7 +17,6 @@ class DistrictsListPage extends StatefulWidget {
 class _DistrictsListPageState extends State<DistrictsListPage> {
   	DistrictsProvider districtProvider = DistrictsProvider();
   	
-	  
 	@override
   	Widget build(BuildContext context) {
 		final height = MediaQuery.of(context).size.height;
@@ -27,11 +26,7 @@ class _DistrictsListPageState extends State<DistrictsListPage> {
         		height: height,
         		child: Stack(
           			children: <Widget>[
-            			Positioned(
-              				top: -MediaQuery.of(context).size.height * .15,
-              				right: -MediaQuery.of(context).size.width * .4,
-              				child: BezierContainer(),
-            			),
+            			BezierContainer(),
 						Container(
               				padding: EdgeInsets.symmetric(horizontal: 20),
               				child: SingleChildScrollView(
@@ -40,14 +35,12 @@ class _DistrictsListPageState extends State<DistrictsListPage> {
                   					mainAxisAlignment: MainAxisAlignment.center,
                   					children: <Widget>[
 										SizedBox(height: 20,),
-										ButtonWidget(title: 'Nueva consigna', colorEnd: Colors.white, colorText: Colors.black, colorStart: Color(0xfffbb448), onTapFunction: _onTapFunction,),
-										SizedBox(height: 30,),
-										Text('Listado de consignas', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
 										_consignas()
 									]
 								)
 							)
-						)
+						),
+						ButtonFloatingWidget(colorButton: Colors.green, icon: Icons.add, colorIcon: Colors.white, onPressed: _onTapFunction, )
 					]
 				)
 			)
@@ -62,7 +55,7 @@ class _DistrictsListPageState extends State<DistrictsListPage> {
 	Widget _appBarTiger({Widget leading}){
 		return PreferredSize(
 			preferredSize: Size.fromHeight(60.0), // here the desired height
-			child: AppBarTiger(title: 'Usuarios', leading: leading,)
+			child: AppBarTiger(title: 'Consignas', leading: leading,)
 		);
 	}
 
@@ -98,20 +91,7 @@ class _DistrictsListPageState extends State<DistrictsListPage> {
 						) 
 					); 
 				} else {
-					return AbsorbPointer(
-						child: BackdropFilter(
-							filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-							child: Container(
-								padding: EdgeInsets.only(top: 20),
-								child: Center(
-										child: CircularProgressIndicator(
-										backgroundColor: Colors.transparent,
-										valueColor: new AlwaysStoppedAnimation<Color>(Color(0xffe46b10)),
-									)
-								)
-							)
-						)
-					);
+					return ProgressIndicatorWidget();
 				}
 		  	},
 		);
