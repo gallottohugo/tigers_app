@@ -5,11 +5,13 @@ import 'package:flutter_login_signup/src/providers/users_provider.dart';
 import 'package:flutter_login_signup/src/widgets/alert_widgets.dart';
 import 'package:flutter_login_signup/src/widgets/app_bar_widget.dart';
 import 'package:flutter_login_signup/src/widgets/bezierContainer.dart';
+import 'package:flutter_login_signup/src/widgets/button_widget.dart';
+import 'package:flutter_login_signup/src/widgets/progress_indicator_widget.dart';
+import 'package:flutter_login_signup/src/widgets/text_form_field_widget.dart';
 
 class UsersCreatePage extends StatefulWidget {
 	static final String routeName = 'signup_page';
-	final String title;
-  	UsersCreatePage({Key key, this.title}) : super(key: key);
+  	UsersCreatePage({Key key}) : super(key: key);
 
   	@override
   	_UsersCreatePageState createState() => _UsersCreatePageState();
@@ -21,17 +23,11 @@ class _UsersCreatePageState extends State<UsersCreatePage> {
 	bool showLoading = false;
 	UserModel newUser = UserModel();
 
-
-
 	@override
   	Widget build(BuildContext context) {
-
 		Map<String, dynamic> mapsArgument = ModalRoute.of(context).settings.arguments;
 		newUser.userType = mapsArgument['user_type'];
-		if (newUser.userType == 'customer'){
-			dropdownValue = newUser.userType;
-		}
-
+		if (newUser.userType == 'customer'){ dropdownValue = 'Cliente'; }
 
     	final height = MediaQuery.of(context).size.height;
 		return Scaffold(
@@ -40,11 +36,7 @@ class _UsersCreatePageState extends State<UsersCreatePage> {
         		height: height,
         		child: Stack(
           			children: <Widget>[
-            			Positioned(
-              				top: -MediaQuery.of(context).size.height * .15,
-              				right: -MediaQuery.of(context).size.width * .4,
-              				child: BezierContainer(),
-            			),
+            			BezierContainer(),
             			Container(
               				padding: EdgeInsets.symmetric(horizontal: 20),
               				child: SingleChildScrollView(
@@ -54,27 +46,12 @@ class _UsersCreatePageState extends State<UsersCreatePage> {
                   					children: <Widget>[
                     					SizedBox(height: 20,),
                     					_formWidget(),
-                    					SizedBox(height: 20,),
-                    					_submitButton(),
                     					SizedBox(height: height * .14),
                   					],
                 				),
               				),
             			),
-						showLoading == true ? AbsorbPointer(
-							child: BackdropFilter(
-								filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-								child: Container(
-									padding: EdgeInsets.only(top: 20),
-									child: Center(
-											child: CircularProgressIndicator(
-											backgroundColor: Colors.transparent,
-											valueColor: new AlwaysStoppedAnimation<Color>(Color(0xffe46b10)),
-										)
-									)
-								)
-							)
-						) : Container()
+						showLoading == true ? ProgressIndicatorWidget() : Container()
           			],
         		),
       		),
@@ -91,78 +68,61 @@ class _UsersCreatePageState extends State<UsersCreatePage> {
 	}
 
 	  
-  
+	
 
-  	Widget _entryField(String title, {@required  String initialValue, @required bool enabled, Function onSaved, @required TextInputType textInputType  }) {
-    	return Container(
-      		margin: EdgeInsets.symmetric(vertical: 10),
-      		child: Column(
-        		crossAxisAlignment: CrossAxisAlignment.start,
-        		children: <Widget>[
-					Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),),
+  	
+
+	
+
+  	Widget _formWidget() {
+    	return Form(
+			key: formKey,
+			child: Column(
+				children: <Widget>[
+					TextFormFieldWidget(title: "Nombre", onSaved: _onSavedName, enabled: true, initialValue: '', textInputType: TextInputType.text),
 					SizedBox(height: 10,),
-					TextFormField(
-						decoration: InputDecoration(
-							border: InputBorder.none,
-							fillColor: Color(0xfff3f3f4),
-							filled: true
-						),
-						keyboardType: textInputType,
-						onSaved: onSaved,
-						initialValue: initialValue,
-						enabled: enabled,
-					)
-        		],
-      		),
-    	);
-  	}
+					TextFormFieldWidget(title: "Apellido", onSaved: _onSavedLastName, enabled: true, initialValue: '', textInputType: TextInputType.text),
+					SizedBox(height: 10),
+					TextFormFieldWidget(title: "Email", onSaved: _onSavedEmail, enabled: true, initialValue: '', textInputType: TextInputType.emailAddress),
+					SizedBox(height: 10,),
+					TextFormFieldWidget(title: "Teléfono", onSaved: _onSavedPhone, enabled: true, initialValue: '', textInputType: TextInputType.phone),
+					SizedBox(height: 10,),
+					newUser.userType == 'customer' ? TextFormFieldWidget(title: "Tipo de usuario", enabled: false, initialValue: 'Cliente', textInputType: TextInputType.text) : _dropDownField() ,
 
-  	Widget _submitButton() {
-    	return GestureDetector(
-			child: Container(
-				width: MediaQuery.of(context).size.width,
-				padding: EdgeInsets.symmetric(vertical: 15),
-				alignment: Alignment.center,
-				decoration: BoxDecoration(
-					borderRadius: BorderRadius.all(Radius.circular(5)),
-					boxShadow: <BoxShadow>[
-						BoxShadow(
-							color: Colors.grey.shade200,
-							offset: Offset(2, 4),
-							blurRadius: 5,
-							spreadRadius: 2
-						)
-					],
-					gradient: LinearGradient(
-						begin: Alignment.centerLeft,
-						end: Alignment.centerRight,
-						colors: [Color(0xfffbb448), Color(0xfff7892b)]
-					)
-				),
-				child: Text(newUser.userType == 'customer' ? 'Crear cliente' : 'Crear usuario', style: TextStyle(fontSize: 20, color: Colors.white)),
-			),
-			onTap: () async {
-				setState(() { showLoading = true; });
-				formKey.currentState.save();
-				UserProvider userProvider = UserProvider();
-				newUser.userType = dropdownValue;
-				Map<String, dynamic> response = await userProvider.usersSignup(user: newUser);
-				setState(() { showLoading = false; });
-				if (response["ok"] == true) {
-					if (newUser.userType == 'customer'){
-						Navigator.pop(context);
-					} else {
-						await AlertWidgets.alertOkWidget(context, 'Usuario creado', 'El usuario se creó correctamente', Icon(Icons.check_circle));
-						Navigator.pop(context);
-					}
-					
-				} else {
-					AlertWidgets.alertOkWidget(context, 'Error', response["message"], Icon(Icons.error));
-				}
-				
-			},
+					SizedBox(height: 20,),
+					ButtonWidget(title: 'Crear',  border: Colors.white, colorStart: Color(0xfffbb448), colorEnd: Color(0xfff7892b), colorText: Colors.white, onTapFunction: _onTapButton, )
+				],
+			)
     	);
+  	} 
+
+
+	void _onSavedName(String value){ newUser.name = value; }
+	void _onSavedLastName(String value){ newUser.lastName = value; }
+	void _onSavedEmail(String value){ newUser.email = value; }
+	void _onSavedPhone(String value){ newUser.phone = value; }
+
+
+	void _onTapButton() async {
+		setState(() { showLoading = true; });
+		formKey.currentState.save();
+		UserProvider userProvider = UserProvider();
+		newUser.userType = dropdownValue;
+		Map<String, dynamic> response = await userProvider.usersSignup(user: newUser);
+		setState(() { showLoading = false; });
+		if (response["ok"] == true) {
+			if (newUser.userType == 'customer'){
+				Navigator.pop(context);
+			} else {
+				await AlertWidgets.alertOkWidget(context, 'Usuario creado', 'El usuario se creó correctamente', Icon(Icons.check_circle));
+				Navigator.pop(context);
+			}
+			
+		} else {
+			AlertWidgets.alertOkWidget(context, 'Error', response["message"], Icon(Icons.error));
+		}
 	}
+
 
 	Widget _dropDownField() {
 		return Container(
@@ -180,7 +140,6 @@ class _UsersCreatePageState extends State<UsersCreatePage> {
 						onChanged: (String newValue) { 
 							setState(() { 
 								dropdownValue = newValue;
-								newUser.userType = newValue;
 							}); 
 						},
 						items: <String>['Administrador', 'Coordinador', 'Empleado'].map<DropdownMenuItem<String>>((String value) {
@@ -194,31 +153,4 @@ class _UsersCreatePageState extends State<UsersCreatePage> {
       		),
     	);
 	}
-
-
-	void _onSavedName(String value){ newUser.name = value; }
-	void _onSavedLastName(String value){ newUser.lastName = value; }
-	void _onSavedEmail(String value){ newUser.email = value; }
-	void _onSavedPhone(String value){ newUser.phone = value; }
-
-	
-
-  	Widget _formWidget() {
-    	return Form(
-			key: formKey,
-			child: Column(
-				children: <Widget>[
-					_entryField("Nombre", onSaved: _onSavedName, enabled: true, initialValue: '', textInputType: TextInputType.text),
-					SizedBox(height: 10,),
-					_entryField("Apellido", onSaved: _onSavedLastName, enabled: true, initialValue: '', textInputType: TextInputType.text),
-					SizedBox(height: 10),
-					_entryField("Email", onSaved: _onSavedEmail, enabled: true, initialValue: '', textInputType: TextInputType.emailAddress),
-					SizedBox(height: 10,),
-					_entryField("Teléfono", onSaved: _onSavedPhone, enabled: true, initialValue: '', textInputType: TextInputType.phone),
-					SizedBox(height: 10,),
-					newUser.userType == 'customer' ? _entryField("Tipo de usuario", enabled: false, initialValue: 'Cliente', textInputType: TextInputType.text) : _dropDownField() ,
-				],
-			)
-    	);
-  	} 
 }
