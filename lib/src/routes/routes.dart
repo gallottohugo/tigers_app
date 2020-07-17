@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_login_signup/src/pages/districts/districts_create_page.dart';
 import 'package:flutter_login_signup/src/pages/districts/districts_list_page.dart';
+import 'package:flutter_login_signup/src/pages/_guards/guards_create_page.dart';
 import 'package:flutter_login_signup/src/pages/home/home_page.dart';
 import 'package:flutter_login_signup/src/pages/houses/houses_create_page.dart';
 import 'package:flutter_login_signup/src/pages/users/users_customers_list_page.dart';
@@ -29,6 +30,11 @@ class ApplicationRoutes {
 			//districts
 			DistrictsCreatePage.routeName : (BuildContext context) => DistrictsCreatePage(),
 			DistrictsListPage.routeName : (BuildContext context) => DistrictsListPage(),
+
+			//guards
+			GuardsCreatePage.routeName : (BuildContext context) => GuardsCreatePage(),
+				
+
 			
 		};
 	}
