@@ -24,7 +24,7 @@ class ButtonWidget extends StatelessWidget {
 						colors: [colorStart, colorEnd]
 					)
 				),
-				child: Text(this.title, style: TextStyle(fontSize: 20, color: Colors.black)),
+				child: Text(this.title, style: TextStyle(fontSize: 20, color: this.colorText)),
 			),
 			onTap: this.onTapFunction
     	);
