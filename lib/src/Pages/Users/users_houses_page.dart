@@ -6,7 +6,8 @@ import 'package:flutter_login_signup/src/pages/houses/houses_create_page.dart';
 import 'package:flutter_login_signup/src/providers/houses_provider.dart';
 import 'package:flutter_login_signup/src/widgets/app_bar_widget.dart';
 import 'package:flutter_login_signup/src/widgets/bezierContainer.dart';
-import 'package:flutter_login_signup/src/widgets/button_widget.dart';
+import 'package:flutter_login_signup/src/widgets/button_floating_widget.dart';
+import 'package:flutter_login_signup/src/widgets/progress_indicator_widget.dart';
 
 class UsersHousesPage extends StatefulWidget {
 	static final String routeName = 'houses_new_page';
@@ -31,11 +32,7 @@ class _UsersHousesPageState extends State<UsersHousesPage> {
         		height: height,
         		child: Stack(
           			children: <Widget>[
-            			Positioned(
-              				top: -MediaQuery.of(context).size.height * .15,
-              				right: -MediaQuery.of(context).size.width * .4,
-              				child: BezierContainer(),
-            			),
+              			BezierContainer(),
             			Container(
               				padding: EdgeInsets.symmetric(horizontal: 20),
               				child: SingleChildScrollView(
@@ -44,41 +41,14 @@ class _UsersHousesPageState extends State<UsersHousesPage> {
                   					mainAxisAlignment: MainAxisAlignment.center,
                   					children: <Widget>[
                     					SizedBox(height: 20,),
-										ButtonWidget(title: 'Nueva casa', colorEnd: Colors.white, colorText: Colors.black, colorStart: Color(0xfffbb448), onTapFunction: _onTapFunction,),
-										SizedBox(height: 30,),
-										Text('Listado de casas', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
-										SizedBox(height: 20,),
                     					_houses(),
                     					SizedBox(height: height * .14),
                   					],
                 				),
               				),
             			),
-						showLoading == true ? AbsorbPointer(
-							child: BackdropFilter(
-								filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-								child: Container(
-									padding: EdgeInsets.only(top: 20),
-									child: Center(
-											child: CircularProgressIndicator(
-											backgroundColor: Colors.transparent,
-											valueColor: new AlwaysStoppedAnimation<Color>(Color(0xffe46b10)),
-										)
-									)
-								)
-							)
-						) : Container(),
-						Align(
-							alignment: Alignment.bottomRight,
-							child: Padding(
-								padding: EdgeInsets.only(bottom: 40.0, right: 30.0),
-								child: FloatingActionButton(
-									backgroundColor: Color(0xfff7892b),
-									child: Icon(Icons.add),
-									onPressed: (){ },
-								)
-							)
-						)
+						showLoading == true ? ProgressIndicatorWidget() : Container(),
+						ButtonFloatingWidget(colorButton: Colors.green, colorIcon: Colors.white, icon: Icons.add, onPressed: _onTapFunction,),  
           			],
         		),
       		),
@@ -94,7 +64,7 @@ class _UsersHousesPageState extends State<UsersHousesPage> {
 	Widget _appBarTiger({Widget leading}){
 		return PreferredSize(
 			preferredSize: Size.fromHeight(60.0), // here the desired height
-			child: AppBarTiger(title: 'Casas por cliente', leading: leading,)
+			child: AppBarTiger(title: 'Propiedades de un cliente', leading: leading,)
 		);
 	}
 
@@ -131,20 +101,7 @@ class _UsersHousesPageState extends State<UsersHousesPage> {
 						) 
 					); 
 				} else {
-					return AbsorbPointer(
-						child: BackdropFilter(
-							filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-							child: Container(
-								padding: EdgeInsets.only(top: 20),
-								child: Center(
-										child: CircularProgressIndicator(
-										backgroundColor: Colors.transparent,
-										valueColor: new AlwaysStoppedAnimation<Color>(Color(0xffe46b10)),
-									)
-								)
-							)
-						)
-					);
+					return ProgressIndicatorWidget();
 				}
 		  	},
 		);
