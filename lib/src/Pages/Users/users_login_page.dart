@@ -5,6 +5,9 @@ import 'package:flutter_login_signup/src/pages/home/home_page.dart';
 import 'package:flutter_login_signup/src/widgets/alert_widgets.dart';
 import 'package:flutter_login_signup/src/widgets/app_bar_widget.dart';
 import 'package:flutter_login_signup/src/widgets/bezierContainer.dart';
+import 'package:flutter_login_signup/src/widgets/button_widget.dart';
+import 'package:flutter_login_signup/src/widgets/progress_indicator_widget.dart';
+import 'package:flutter_login_signup/src/widgets/text_form_field_widget.dart';
 
 
 class UsersLoginPage extends StatefulWidget {
@@ -32,53 +35,40 @@ class _UsersLoginPageState extends State<UsersLoginPage> {
 					height: height,
 					child: Stack(
 						children: <Widget>[
-							Positioned(
-								top: -height * .15,
-								right: -MediaQuery.of(context).size.width * .4,
-								child: BezierContainer()
-							),
+							BezierContainer(),
 							Container(
 								padding: EdgeInsets.symmetric(horizontal: 20),
 								child: SingleChildScrollView(
-									child: Column(
-										crossAxisAlignment: CrossAxisAlignment.center,
-										mainAxisAlignment: MainAxisAlignment.center,
-										children: <Widget>[
-											SizedBox(height: height * .2),
-											SizedBox(height: 80),
-											_emailPasswordWidget(),
-											SizedBox(height: 20),
-											_submitButton(),
-											Container(
-												padding: EdgeInsets.symmetric(vertical: 10),
-												alignment: Alignment.centerRight,
-												child: Text('¿Perdió su contraseña?', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-											),
-										],
+									child: Form(
+										key: formKey,
+										child: Column(
+											crossAxisAlignment: CrossAxisAlignment.center,
+											mainAxisAlignment: MainAxisAlignment.center,
+											children: <Widget>[
+												SizedBox(height: height * .2),
+												SizedBox(height: 80),
+												TextFormFieldWidget(title: 'Correo electrónico', enabled: true, initialValue: '', obscureText: false, onSaved: _onSavedUser, textInputType: TextInputType.emailAddress,),
+												SizedBox(height: 10),
+												TextFormFieldWidget(title: 'Contraseña', enabled: true, initialValue: '', obscureText: true, onSaved: _onSavedPassword, textInputType: TextInputType.text,),
+												SizedBox(height: 20),
+												ButtonWidget(border: Colors.white, title: 'Iniciar sesión', colorStart: Color(0xfffbb448), colorEnd: Color(0xfff7892b), colorText: Colors.white, onTapFunction: _onTapButton,),
+												Container(
+													padding: EdgeInsets.symmetric(vertical: 10),
+													alignment: Alignment.centerRight,
+													child: Text('¿Perdió su contraseña?', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+												),
+											],
+									  	),
 									),
 								),
 							),
-							showLoading == true ? AbsorbPointer(
-								child: BackdropFilter(
-									filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-									child: Container(
-										padding: EdgeInsets.only(top: 20),
-										child: Center(
-												child: CircularProgressIndicator(
-												backgroundColor: Colors.transparent,
-												valueColor: new AlwaysStoppedAnimation<Color>(Color(0xffe46b10)),
-											)
-										)
-									)
-								)
-							) : Container()
+							showLoading == true ? ProgressIndicatorWidget() : Container()
 						],
 					),
 				)
 			)
 		);
 	}
-
 
 	Widget _appBarTiger(){
 		return PreferredSize(
@@ -87,94 +77,26 @@ class _UsersLoginPageState extends State<UsersLoginPage> {
 		);
 	}
 
-	Widget _submitButton() {
-    	return GestureDetector(
-			child: Container(
-				width: MediaQuery.of(context).size.width,
-				padding: EdgeInsets.symmetric(vertical: 15),
-				alignment: Alignment.center,
-				decoration: BoxDecoration(
-					borderRadius: BorderRadius.all(Radius.circular(5)),
-					boxShadow: <BoxShadow>[
-						BoxShadow(
-							color: Colors.grey.shade200,
-							offset: Offset(2, 4),
-							blurRadius: 5,
-							spreadRadius: 2
-						)
-					],
-					gradient: LinearGradient(
-						begin: Alignment.centerLeft,
-						end: Alignment.centerRight,
-						colors: [Color(0xfffbb448), Color(0xfff7892b)])
-					),
-					child: Text('Iniciar sesión', style: TextStyle(fontSize: 20, color: Colors.white),
-				),
-    	  	),
-			onTap: () async {
-				setState(() { showLoading = true; });
-				formKey.currentState.save();
-				UserProvider userProvider = UserProvider();
-				Map<String, dynamic> response = await userProvider.usersLogin(user: currentUser, password: currentPassword);
-				setState(() { showLoading = false; });
-				if (response["ok"] == true){
-					Navigator.pushNamed(context, HomePage.routeName);
-				} else {
-					AlertWidgets.alertOkWidget(context, 'Error', 'Ocurrió un error, vuelva a intentarlo!', Icon(Icons.error));
-				}
-				
-			},
-    	);
-  	}
+	void _onSavedUser(String value){ currentUser = value; }
+	void _onSavedPassword(String value){ currentPassword = value; }
+
+	void _onTapButton() async {
+		try{
+			setState(() { showLoading = true; });
+			formKey.currentState.save();
+			UserProvider userProvider = UserProvider();
+			Map<String, dynamic> response = await userProvider.usersLogin(user: currentUser, password: currentPassword);
+			setState(() { showLoading = false; });
+			if (response["ok"] == true){
+				Navigator.pushNamed(context, HomePage.routeName);
+			} else {
+				AlertWidgets.alertOkWidget(context, 'Error', 'Ocurrió un error, vuelva a intentarlo!', Icon(Icons.error));
+			}		
+		} catch(exc){
+			setState(() { showLoading = false; });
+		}
+	}
 
 
-	
-  
-
-  	Widget _emailPasswordWidget() {
-		return Form(
-			key: formKey,
-			child: Column(
-      			children: <Widget>[
-					Container(
-						margin: EdgeInsets.symmetric(vertical: 10),
-						child: Column(
-							crossAxisAlignment: CrossAxisAlignment.start,
-							children: <Widget>[
-								Text("Usuario", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),),
-								SizedBox(height: 10,),
-
-								TextFormField(
-									obscureText: false,
-									decoration: InputDecoration( border: InputBorder.none, fillColor: Color(0xfff3f3f4), filled: true ),
-									onSaved: (String value){ currentUser = value; },
-								)
-							],
-						),
-					),
-					Container(
-						margin: EdgeInsets.symmetric(vertical: 10),
-						child: Column(
-							crossAxisAlignment: CrossAxisAlignment.start,
-							children: <Widget>[
-								Text("Contraseña", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),),
-								SizedBox(height: 10,),
-								TextFormField(
-									obscureText: true,
-									decoration: InputDecoration(
-										border: InputBorder.none,
-										fillColor: Color(0xfff3f3f4),
-										filled: true
-									),
-									onSaved: (String value){
-										currentPassword = value;
-									},
-								)
-							],
-						),
-					),
-      			],
-			)
-    	);
-  	}
+  	
 }
