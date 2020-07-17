@@ -20,11 +20,7 @@ class _HomePageState extends State<HomePage> {
       			height: height,
       			child: Stack(
         			children: <Widget>[
-          				Positioned(
-              				top: -height * .15,
-              				right: -MediaQuery.of(context).size.width * .4,
-              				child: BezierContainer()
-						),
+          				BezierContainer()
 					]
 				)
 			)
