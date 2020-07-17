@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login_signup/src/models/user_model.dart';
 import 'package:flutter_login_signup/src/pages/districts/districts_list_page.dart';
+import 'package:flutter_login_signup/src/pages/_guards/guards_create_page.dart';
 import 'package:flutter_login_signup/src/pages/users/users_customers_list_page.dart';
 import 'package:flutter_login_signup/src/pages/users/users_list_page.dart';
 import 'package:flutter_login_signup/src/pages/users/users_login_page.dart';
@@ -73,7 +74,9 @@ class _DrawerWidgetState extends State<DrawerWidget> {
 							leading: Container(width: 50.0, child: Icon(Icons.work, color: Color(0xfff7892b),)),
 							trailing: Icon(Icons.navigate_next, color: Color(0xfff7892b)),
 							title: Text('Guardias'),
-							onTap: (){ },
+							onTap: (){ 
+								Navigator.pushNamed(context, GuardsCreatePage.routeName);
+							},
 						),
 						Divider(color: Color(0xfff7892b)),
 						
