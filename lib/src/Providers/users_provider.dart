@@ -60,7 +60,6 @@ class UserProvider {
 				return { 'ok': false, 'message': decodedData["errors"][0] }; 
 			}	
 		} catch (exception){ 
-			print(exception);
 			return { 'ok': false, 'message': "exception" }; 
 		}
 	}
