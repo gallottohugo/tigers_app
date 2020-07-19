@@ -12,7 +12,7 @@ class TextFormFieldWidget extends StatefulWidget {
 	final bool obscureText;
 	final TextEditingController controller;
 
-  	TextFormFieldWidget({Key key, this.enabled, this.initialValue, this.onSaved, this.textInputType, this.title, this.obscureText = true, this.onTap, this.onChanged, this.controller}) : super(key: key);
+  	TextFormFieldWidget({Key key, this.enabled, this.initialValue, this.onSaved, this.textInputType, this.title, this.obscureText = false, this.onTap, this.onChanged, this.controller}) : super(key: key);
   	_TextFormFieldWidgetState createState() => _TextFormFieldWidgetState();
 }
 
