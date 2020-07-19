@@ -117,7 +117,6 @@ class _UsersCreatePageState extends State<UsersCreatePage> {
 				await AlertWidgets.alertOkWidget(context, 'Usuario creado', 'El usuario se creó correctamente', Icon(Icons.check_circle));
 				Navigator.pop(context);
 			}
-			
 		} else {
 			AlertWidgets.alertOkWidget(context, 'Error', response["message"], Icon(Icons.error));
 		}
