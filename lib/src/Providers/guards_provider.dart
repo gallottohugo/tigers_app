@@ -7,14 +7,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_login_signup/src/providers/server_provider.dart';
 
 class GuardsProvider {
-	Future<Map<String, dynamic>> guardsCreate ({@required GuardModel guard}) async{
+	Future<Map<String, dynamic>> guardsCreate ({@required GuardModel guard, @required List<UserModel> employees}) async{
+
+		String employeesArr = '';
+		for(UserModel item in employees){ employeesArr += item.id.toString() + ","; }
+
 		try{
 			final url = '${ ServerProvider.server }/v1/guards';
 			Map<String, dynamic> params = {
 				'date': guard.date,
-				'start': guard.start,
-				'end': guard.end,
-				'district_id': guard.districtId
+				'start': guard.start.toString(),
+				'end': guard.end.toString(),
+				'district_id': guard.districtId.toString(),
+				'employees': employeesArr
 			};
 			final response = await http.post(
 				url, 
