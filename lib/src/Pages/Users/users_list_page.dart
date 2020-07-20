@@ -21,9 +21,19 @@ class _UsersListPageState extends State<UsersListPage> {
 	List<UserModel> usersList = List<UserModel>();
 	List<UserModel> usersListFiltered = List<UserModel>();
 	bool firstTime = true;
+	String userType = 'users';
+	bool fromSearchEmployee = false;
+
 
   	@override
   	Widget build(BuildContext context) {
+		if (ModalRoute.of(context).settings.arguments != null){
+			Map<String, dynamic> mapsArgument = ModalRoute.of(context).settings.arguments;
+			userType = mapsArgument['user_type'];
+			fromSearchEmployee = mapsArgument['from_search_employee'];
+		}
+		
+
 		final height = MediaQuery.of(context).size.height;
 		return Scaffold(
 			appBar: _appBarTiger(),
@@ -42,12 +52,12 @@ class _UsersListPageState extends State<UsersListPage> {
 										SizedBox(height: 20,),
 										SearchWidget(onChanged: _onChanged),
 										SizedBox(height: 30,),
-										firstTime ? _users() : ColumnUser(userModelList: usersListFiltered,),
+										firstTime ? _users() : ColumnUser(userModelList: usersListFiltered, fromSearchEmployee: this.fromSearchEmployee,),
 									]
 								)
 							)
 						),
-						ButtonFloatingWidget(colorButton: Colors.green, icon: Icons.add, colorIcon: Colors.white, onPressed: _onTapFunction, )
+						this.userType == 'users' ? ButtonFloatingWidget(colorButton: Colors.green, icon: Icons.add, colorIcon: Colors.white, onPressed: _onTapFunction) : Container()
 					]
 				)
 			)
@@ -77,12 +87,12 @@ class _UsersListPageState extends State<UsersListPage> {
 
 	Widget _users(){
 		return FutureBuilder(
-		  	future: userProvider.usersList(filter: 'users'),
+		  	future: userProvider.usersList(filter: this.userType),
 		  	initialData: null,
 		  	builder: (BuildContext context, AsyncSnapshot<List<UserModel>> snapshot) {
 				if (snapshot.hasData){
 					usersList = snapshot.data;
-					return Container(child: ColumnUser(userModelList: usersList)); 
+					return Container(child: ColumnUser(userModelList: usersList, fromSearchEmployee: this.fromSearchEmployee,)); 
 				} else {
 					return ProgressIndicatorWidget();
 				}
