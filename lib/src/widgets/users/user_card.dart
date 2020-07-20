@@ -3,8 +3,9 @@ import 'package:flutter_login_signup/src/models/user_model.dart';
 import 'package:flutter_login_signup/src/pages/users/users_houses_page.dart';
 
 class UserCard extends StatelessWidget {
+	final bool fromSearchEmployee;
 	final UserModel userModel;
-  	const UserCard({Key key, @required this.userModel}) : super(key: key);
+  	const UserCard({Key key, @required this.userModel, @required this.fromSearchEmployee}) : super(key: key);
 
   	@override
   	Widget build(BuildContext context) {
@@ -20,8 +21,10 @@ class UserCard extends StatelessWidget {
 				),
 			),
 			onTap: (){
-				if (userModel.userType == 'customer'){
-					Navigator.pushNamed(context, UsersHousesPage.routeName, arguments: {'customer': userModel});
+				if (this.fromSearchEmployee){ 
+					Navigator.pop(context, userModel); 
+				} else {
+					if (userModel.userType == 'customer'){ Navigator.pushNamed(context, UsersHousesPage.routeName, arguments: {'customer': userModel}); }
 				}
 			},
 		);
