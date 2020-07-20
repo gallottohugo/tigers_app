@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login_signup/src/models/guard_model.dart';
+import 'package:flutter_login_signup/src/models/user_model.dart';
+import 'package:flutter_login_signup/src/pages/users/users_list_page.dart';
 import 'package:flutter_login_signup/src/providers/guards_provider.dart';
 import 'package:flutter_login_signup/src/styles/colors.dart';
 import 'package:flutter_login_signup/src/widgets/Districts/districts_dropDown_button_widget.dart';
@@ -22,9 +24,20 @@ class _GuardsCreatePageState extends State<GuardsCreatePage> {
 	final formKey = GlobalKey<FormState>();
 	GuardModel newGuard = GuardModel();
 	TextEditingController controllerDate = TextEditingController();
+	List<UserModel> employees = List<UserModel>();
+
 
 	void handleDistrictDropdownValue(int newValue){
 		if (newValue > 0){  newGuard.districtId = newValue; }
+	}
+
+
+	void handleAddEmployee(UserModel userModel){
+		employees.add(userModel);
+	}
+
+	void handleRemoveEmployee(UserModel userModel){
+		employees.remove(userModel);
 	}
 
 
@@ -42,8 +55,6 @@ class _GuardsCreatePageState extends State<GuardsCreatePage> {
               				padding: EdgeInsets.symmetric(horizontal: 20),
               				child: SingleChildScrollView(
                 				child: Column(
-                  					crossAxisAlignment: CrossAxisAlignment.center,
-                  					mainAxisAlignment: MainAxisAlignment.center,
                   					children: <Widget>[
                     					SizedBox(height: 20,),
                     					_formWidget(),
@@ -72,13 +83,13 @@ class _GuardsCreatePageState extends State<GuardsCreatePage> {
 		setState(() { showLoading = true; });
 		formKey.currentState.save();
 		GuardsProvider guardsProvider = GuardsProvider();
-		Map<String, dynamic> response = await guardsProvider.guardsCreate(guard: newGuard);
+		Map<String, dynamic> response = await guardsProvider.guardsCreate(guard: newGuard, employees: employees);
 		setState(() { showLoading = false; });
 		if (response["ok"] == true) {
 			Navigator.pop(context);
 		} else {
 			AlertWidgets.alertOkWidget(context, 'Error', response["message"], Icon(Icons.error));
-		}
+		}	
 	}
 	
 
@@ -97,11 +108,12 @@ class _GuardsCreatePageState extends State<GuardsCreatePage> {
 					SizedBox(height: 20,),
 					Divider(color: TigerColors.orange, thickness: 2,),
 					SizedBox(height: 20,),
-					Text('Aca van los empleados'),
+					AddEmployeesWidget(handleAddEmployee: handleAddEmployee, handleRemoveEmployee: handleRemoveEmployee,),
 					SizedBox(height: 20,),
 					Divider(color: TigerColors.orange, thickness: 2,),
 					SizedBox(height: 20,),
-					ButtonWidget(title: 'Crear', border: Colors.white, colorStart: Color(0xfffbb448), colorEnd: Color(0xfff7892b), colorText: Colors.black, onTapFunction: _onTapButton,)
+					ButtonWidget(title: 'Crear', border: Colors.white, colorStart: Color(0xfffbb448), colorEnd: Color(0xfff7892b), colorText: Colors.black, onTapFunction: _onTapButton,),
+					SizedBox(height: 20,),
 				],
 			)
     	);
@@ -119,7 +131,6 @@ class _GuardsCreatePageState extends State<GuardsCreatePage> {
 	}
 	
 	
-
 
 
 	Future<DateTime> _datePicker(BuildContext context) async {
@@ -143,7 +154,58 @@ class _GuardsCreatePageState extends State<GuardsCreatePage> {
             },
       	);
 		return date;
+  	}	
+}
+
+
+class AddEmployeesWidget extends StatefulWidget {
+	final ValueChanged<UserModel> handleAddEmployee;
+	final ValueChanged<UserModel> handleRemoveEmployee;
+  	AddEmployeesWidget({Key key, @required this.handleAddEmployee, @required this.handleRemoveEmployee}) : super(key: key);
+  	_AddEmployeesWidgetState createState() => _AddEmployeesWidgetState();
+}
+
+class _AddEmployeesWidgetState extends State<AddEmployeesWidget> {
+	List<UserModel> employees = List<UserModel>();
+  	@override
+  	Widget build(BuildContext context) {
+		return Column(
+			children: <Widget>[
+				Text('Asignar empleados', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),),
+				Column(
+					children: new List<Widget>.generate(employees.length, (int index) {
+						return Column(
+							children: <Widget>[
+								ListTile(
+									leading: Icon(Icons.person),
+									title: Text('${employees[index].lastName}, ${employees[index].name}'),
+									trailing: IconButton(
+										icon: Icon(Icons.close),
+										onPressed: (){
+											widget.handleRemoveEmployee(employees[index]);
+											employees.remove(employees[index]);
+											setState(() { });
+										},
+									),
+								)
+							],
+						);
+					})
+				),
+				IconButton(
+					iconSize: 35,
+					color: Colors.green,
+					icon: Icon(Icons.add_circle),
+					onPressed: () async {
+						var response = await Navigator.pushNamed(context, UsersListPage.routeName, arguments: {'user_type': 'employee', 'from_search_employee': true});
+						if (response != null){
+							widget.handleAddEmployee(response);
+							employees.add(response);
+							setState(() { });
+						}
+					},
+				)
+			],
+		);  
   	}
-	
-	
 }
