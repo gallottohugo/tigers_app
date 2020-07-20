@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_login_signup/src/models/district_model.dart';
 import 'package:flutter_login_signup/src/providers/districts_provider.dart';
@@ -59,26 +58,27 @@ class _DistrictsDropDownButtonWidgetState extends State<DistrictsDropDownButtonW
         		children: <Widget>[
 					Text('Consigna', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),),
 					SizedBox(height: 10,),
-					DropdownButton<String>(
-						isExpanded: true,
-						value: dropdownValue,
-						underline: Container(),
-						elevation: 16,
-						onChanged: (String newValue) { 
-							setState(() {  
-								dropdownValue = newValue;
-								int id = districtList.firstWhere((item) => item.name == dropdownValue).id;
-								widget.handleDistrictDropdownValue(id);
-							}); 
-						},
-						
-						
-						items: districts.map<DropdownMenuItem<String>>((value) {
-							return DropdownMenuItem<String>(
-								value: value.name,
-								child: Text(value.name),
-							);
-						}).toList(),
+					Container(
+						color: Color(0xfff3f3f4),
+					  	child: DropdownButton<String>(
+							isExpanded: true,
+							value: dropdownValue,
+							underline: Container(),
+							elevation: 16,
+							onChanged: (String newValue) { 
+								setState(() {  
+									dropdownValue = newValue;
+									int id = districtList.firstWhere((item) => item.name == dropdownValue).id;
+									widget.handleDistrictDropdownValue(id);
+								}); 
+							},
+							items: districts.map<DropdownMenuItem<String>>((value) {
+								return DropdownMenuItem<String>(
+									value: value.name,
+									child: Text(value.name),
+								);
+							}).toList(),
+					  	),
 					)
         		],
       		),
