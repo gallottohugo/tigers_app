@@ -42,7 +42,7 @@ class _UsersCustomersListPageState extends State<UsersCustomersListPage> {
 										SizedBox(height: 20,),
 										SearchWidget(onChanged: _onChanged),
 										SizedBox(height: 30,),
-										firstTime ? _customers() : ColumnUser(userModelList: usersListFiltered,),
+										firstTime ? _customers() : ColumnUser(userModelList: usersListFiltered, fromSearchEmployee: false,),
 									]
 								)
 							)
@@ -88,7 +88,7 @@ class _UsersCustomersListPageState extends State<UsersCustomersListPage> {
 				if (snapshot.hasData){
 					usersList = snapshot.data;
 					return Container(
-						child: ColumnUser(userModelList: snapshot.data,)
+						child: ColumnUser(userModelList: snapshot.data, fromSearchEmployee: false,)
 					); 
 				} else { return ProgressIndicatorWidget(); }
 		  	},
