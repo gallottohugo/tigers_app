@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_login_signup/src/blocs/login_bloc.dart';
+import 'package:flutter_login_signup/src/blocs/pattern_bloc.dart';
+export 'package:flutter_login_signup/src/blocs/pattern_bloc.dart';
 
 class ProviderBloc extends InheritedWidget {
 
   	static ProviderBloc _instancia;
+
+	ProviderBloc._internal({ Key key, Widget child }) : super(key: key, child: child );
 
   	factory ProviderBloc({ Key key, Widget child }) {
     	if ( _instancia == null ) {
@@ -12,19 +15,20 @@ class ProviderBloc extends InheritedWidget {
     	return _instancia;
   	}
 
-  	ProviderBloc._internal({ Key key, Widget child }) : super(key: key, child: child );
+  	
 
 
-  	final loginBloc = LoginBloc();
+  	final loginBloc = PatternBloc();
 
 
  
   	@override
   	bool updateShouldNotify(InheritedWidget oldWidget) => true;
 
-  	static LoginBloc of ( BuildContext context ) {
-    	return ( context.inheritFromWidgetOfExactType(ProviderBloc) as ProviderBloc ).loginBloc;
-		//return ( context.dependOnInheritedWidgetOfExactType(Provider) as Provider ).loginBloc;
-  	}
+  	
+
+	static PatternBloc of ( BuildContext context ){
+   		return context.dependOnInheritedWidgetOfExactType<ProviderBloc>().loginBloc;
+	}
 
 }
