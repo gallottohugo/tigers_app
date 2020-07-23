@@ -82,15 +82,15 @@ class _HousesCreatePageState extends State<HousesCreatePage> {
 			key: formKey,
 			child: Column(
 				children: <Widget>[
-					TextFormFieldWidget(title: 'Dirección', enabled: true, initialValue: '', obscureText: false, onSaved: _onSavedAddress, textInputType: TextInputType.text,),
+					TextFormFieldWidget(title: 'Dirección', enabled: true, initialValue: '', obscureText: false, onSavedFunction: _onSavedAddress, textInputType: TextInputType.text,),
 					SizedBox(height: 10,),
-					TextFormFieldWidget(title: 'Número', enabled: true, initialValue: '', obscureText: false, onSaved: _onSavedAddressNumber, textInputType: TextInputType.number,),
+					TextFormFieldWidget(title: 'Número', enabled: true, initialValue: '', obscureText: false, onSavedFunction: _onSavedAddressNumber, textInputType: TextInputType.number,),
 					SizedBox(height: 10,),
-					TextFormFieldWidget(title: 'Ciudad', enabled: true, initialValue: '', obscureText: false, onSaved: _onSavedCity, textInputType: TextInputType.text,),
+					TextFormFieldWidget(title: 'Ciudad', enabled: true, initialValue: '', obscureText: false, onSavedFunction: _onSavedCity, textInputType: TextInputType.text,),
 					SizedBox(height: 10,),
 					DistrictsDropDownButtonWidget(handleDistrictDropdownValue: handleDistrictDropdownValue,),
 					SizedBox(height: 20,),
-					ButtonWidget(title: 'Crear', border: Colors.white, colorStart: Color(0xfffbb448), colorEnd: Color(0xfff7892b), colorText: Colors.white, onTapFunction: _onTapButton,)
+					ButtonWidget(title: 'Crear', border: Colors.white, colorStart: Color(0xfffbb448), colorEnd: Color(0xfff7892b), colorText: Colors.white, onPressedFunction: _onTapButton,)
 				],
 			)
     	);
