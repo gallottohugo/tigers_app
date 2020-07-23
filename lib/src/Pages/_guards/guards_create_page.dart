@@ -98,11 +98,11 @@ class _GuardsCreatePageState extends State<GuardsCreatePage> {
 			key: formKey,
 			child: Column(
 				children: <Widget>[
-					TextFormFieldWidget(title: 'Fecha', enabled: true, obscureText: false, onSaved: _onSavedDate, textInputType: TextInputType.text, onTap: _onTapDate, controller: controllerDate,),
+					TextFormFieldWidget(title: 'Fecha', enabled: true, obscureText: false, onSavedFunction: _onSavedDate, textInputType: TextInputType.text, onTapFunction: _onTapDate, controller: controllerDate,),
 					SizedBox(height: 20,),
-					TextFormFieldWidget(title: 'Hora inicio', enabled: true, initialValue: '', obscureText: false, onSaved: _onSavedStart, textInputType: TextInputType.number,),
+					TextFormFieldWidget(title: 'Hora inicio', enabled: true, initialValue: '', obscureText: false, onSavedFunction: _onSavedStart, textInputType: TextInputType.number,),
 					SizedBox(height: 20,),
-					TextFormFieldWidget(title: 'Hora fin', enabled: true, initialValue: '', obscureText: false, onSaved: _onSavedEnd, textInputType: TextInputType.number,),
+					TextFormFieldWidget(title: 'Hora fin', enabled: true, initialValue: '', obscureText: false, onSavedFunction: _onSavedEnd, textInputType: TextInputType.number,),
 					SizedBox(height: 20,),
 					DistrictsDropDownButtonWidget(handleDistrictDropdownValue: handleDistrictDropdownValue,),
 					SizedBox(height: 20,),
@@ -112,7 +112,7 @@ class _GuardsCreatePageState extends State<GuardsCreatePage> {
 					SizedBox(height: 20,),
 					Divider(color: TigerColors.orange, thickness: 2,),
 					SizedBox(height: 20,),
-					ButtonWidget(title: 'Crear', border: Colors.white, colorStart: Color(0xfffbb448), colorEnd: Color(0xfff7892b), colorText: Colors.black, onTapFunction: _onTapButton,),
+					ButtonWidget(title: 'Crear', border: Colors.white, colorStart: Color(0xfffbb448), colorEnd: Color(0xfff7892b), colorText: Colors.black, onPressedFunction: _onTapButton,),
 					SizedBox(height: 20,),
 				],
 			)
