@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_login_signup/src/Providers/users_provider.dart';
+import 'package:flutter_login_signup/src/blocs/provider_bloc.dart';
+import 'package:flutter_login_signup/src/models/user_model.dart';
 import 'package:flutter_login_signup/src/pages/home/home_page.dart';
 import 'package:flutter_login_signup/src/widgets/alert_widgets.dart';
 import 'package:flutter_login_signup/src/widgets/app_bar_widget.dart';
@@ -39,27 +41,7 @@ class _UsersLoginPageState extends State<UsersLoginPage> {
 							Container(
 								padding: EdgeInsets.symmetric(horizontal: 20),
 								child: SingleChildScrollView(
-									child: Form(
-										key: formKey,
-										child: Column(
-											crossAxisAlignment: CrossAxisAlignment.center,
-											mainAxisAlignment: MainAxisAlignment.center,
-											children: <Widget>[
-												SizedBox(height: height * .2),
-												SizedBox(height: 80),
-												TextFormFieldWidget(title: 'Correo electrónico', enabled: true, initialValue: '', obscureText: false, onSaved: _onSavedUser, textInputType: TextInputType.emailAddress,),
-												SizedBox(height: 10),
-												TextFormFieldWidget(title: 'Contraseña', enabled: true, initialValue: '', obscureText: true, onSaved: _onSavedPassword, textInputType: TextInputType.text,),
-												SizedBox(height: 20),
-												ButtonWidget(border: Colors.white, title: 'Iniciar sesión', colorStart: Color(0xfffbb448), colorEnd: Color(0xfff7892b), colorText: Colors.white, onTapFunction: _onTapButton,),
-												Container(
-													padding: EdgeInsets.symmetric(vertical: 10),
-													alignment: Alignment.centerRight,
-													child: Text('¿Perdió su contraseña?', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-												),
-											],
-									  	),
-									),
+									child: _loginForm(height)
 								),
 							),
 							showLoading == true ? ProgressIndicatorWidget() : Container()
@@ -77,15 +59,61 @@ class _UsersLoginPageState extends State<UsersLoginPage> {
 		);
 	}
 
-	void _onSavedUser(String value){ currentUser = value; }
-	void _onSavedPassword(String value){ currentPassword = value; }
 
-	void _onTapButton() async {
+	Widget _loginForm(double height){
+		final providerBloc = ProviderBloc.of(context);
+
+		return Form(
+			key: formKey,
+			child: Column(
+				crossAxisAlignment: CrossAxisAlignment.center,
+				mainAxisAlignment: MainAxisAlignment.center,
+				children: <Widget>[
+					SizedBox(height: height * .2),
+					SizedBox(height: 80),
+					TextFormFieldWidget(
+						title: 'Correo electrónico', 
+						enabled: true, 
+						initialValue: '', 
+						obscureText: false,
+						textInputType: TextInputType.emailAddress,
+						stream: providerBloc.emailStream,
+						onChangedFunction: providerBloc.changeEmail,
+					),
+					SizedBox(height: 10),
+					TextFormFieldWidget(
+						title: 'Contraseña', 
+						enabled: true, 
+						obscureText: true, 
+						textInputType: TextInputType.text,
+						stream: providerBloc.passwordStream,
+						onChangedFunction: providerBloc.changePassword,),
+					SizedBox(height: 20),
+					ButtonWidget(
+						border: Colors.white, 
+						title: 'Iniciar sesión', 
+						colorStart: Color(0xfffbb448), 
+						colorEnd: Color(0xfff7892b), 
+						colorText: Colors.white, 
+						onPressedFunction: ()=> _onPressedLogin(providerBloc),
+						stream: providerBloc.formLoginStream,
+					),
+					Container(
+						padding: EdgeInsets.symmetric(vertical: 10),
+						alignment: Alignment.centerRight,
+						child: Text('¿Perdió su contraseña?', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+					),
+				],
+			),
+		);
+	}
+
+	
+	void _onPressedLogin(PatternBloc loginBloc) async {
 		try{
 			setState(() { showLoading = true; });
-			formKey.currentState.save();
 			UserProvider userProvider = UserProvider();
-			Map<String, dynamic> response = await userProvider.usersLogin(user: currentUser, password: currentPassword);
+			Map<String, dynamic> response = await userProvider.usersLogin(user: loginBloc.emailLastValue, password: loginBloc.passwordLastValue);
 			setState(() { showLoading = false; });
 			if (response["ok"] == true){
 				Navigator.pushNamed(context, HomePage.routeName);
