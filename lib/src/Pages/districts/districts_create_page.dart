@@ -81,9 +81,9 @@ class _DistrictsCreatePageState extends State<DistrictsCreatePage> {
 			key: formKey,
 			child: Column(
 				children: <Widget>[
-					TextFormFieldWidget(title: 'Nombre', enabled: true, initialValue: '', obscureText: false, onSaved: _onSavedName, textInputType: TextInputType.text,),
+					TextFormFieldWidget(title: 'Nombre', enabled: true, initialValue: '', obscureText: false, onSavedFunction: _onSavedName, textInputType: TextInputType.text,),
 					SizedBox(height: 20,),
-					ButtonWidget(title: 'Crear', border: Colors.white, colorStart: Color(0xfffbb448), colorEnd: Color(0xfff7892b), colorText: Colors.black, onTapFunction: _onTapButton,)
+					ButtonWidget(title: 'Crear', border: Colors.white, colorStart: Color(0xfffbb448), colorEnd: Color(0xfff7892b), colorText: Colors.black, onPressedFunction: _onTapButton,)
 				],
 			)
     	);
