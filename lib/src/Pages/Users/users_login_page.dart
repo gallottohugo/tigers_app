@@ -2,7 +2,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_login_signup/src/Providers/users_provider.dart';
 import 'package:flutter_login_signup/src/blocs/provider_bloc.dart';
-import 'package:flutter_login_signup/src/models/user_model.dart';
 import 'package:flutter_login_signup/src/pages/home/home_page.dart';
 import 'package:flutter_login_signup/src/widgets/alert_widgets.dart';
 import 'package:flutter_login_signup/src/widgets/app_bar_widget.dart';
@@ -20,9 +19,6 @@ class UsersLoginPage extends StatefulWidget {
 }
 
 class _UsersLoginPageState extends State<UsersLoginPage> {
-	final formKey = GlobalKey<FormState>();
-	String currentUser = "";
-	String currentPassword = "";
 	bool showLoading = false;
 
 
@@ -62,61 +58,32 @@ class _UsersLoginPageState extends State<UsersLoginPage> {
 
 	Widget _loginForm(double height){
 		final providerBloc = ProviderBloc.of(context);
-
-		return Form(
-			key: formKey,
-			child: Column(
-				crossAxisAlignment: CrossAxisAlignment.center,
-				mainAxisAlignment: MainAxisAlignment.center,
-				children: <Widget>[
-					SizedBox(height: height * .2),
-					SizedBox(height: 80),
-					TextFormFieldWidget(
-						title: 'Correo electrónico', 
-						enabled: true, 
-						initialValue: '', 
-						obscureText: false,
-						textInputType: TextInputType.emailAddress,
-						stream: providerBloc.emailStream,
-						onChangedFunction: providerBloc.changeEmail,
-					),
-					SizedBox(height: 10),
-					TextFormFieldWidget(
-						title: 'Contraseña', 
-						enabled: true, 
-						obscureText: true, 
-						textInputType: TextInputType.text,
-						stream: providerBloc.passwordStream,
-						onChangedFunction: providerBloc.changePassword,),
-					SizedBox(height: 20),
-					ButtonWidget(
-						border: Colors.white, 
-						title: 'Iniciar sesión', 
-						colorStart: Color(0xfffbb448), 
-						colorEnd: Color(0xfff7892b), 
-						colorText: Colors.white, 
-						onPressedFunction: ()=> _onPressedLogin(providerBloc),
-						stream: providerBloc.formLoginStream,
-					),
-					Container(
-						padding: EdgeInsets.symmetric(vertical: 10),
-						alignment: Alignment.centerRight,
-						child: Text('¿Perdió su contraseña?', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-					),
-				],
-			),
+		return Column(
+			crossAxisAlignment: CrossAxisAlignment.center,
+			mainAxisAlignment: MainAxisAlignment.center,
+			children: <Widget>[
+				SizedBox(height: height * .2),
+				SizedBox(height: 80),
+				TextFormFieldWidget(title: 'Correo electrónico', enabled: true, initialValue: '', obscureText: false, textInputType: TextInputType.emailAddress, stream: providerBloc.emailStream, onChangedFunction: providerBloc.changeEmail,),
+				SizedBox(height: 20),
+				TextFormFieldWidget(title: 'Contraseña', enabled: true, obscureText: true,  textInputType: TextInputType.text, stream: providerBloc.passwordStream, onChangedFunction: providerBloc.changePassword,),
+				SizedBox(height: 20),
+				ButtonWidget(border: Colors.white, title: 'Iniciar sesión', colorStart: Color(0xfffbb448), colorEnd: Color(0xfff7892b),  colorText: Colors.white,  onPressedFunction: ()=> _onPressedLogin(providerBloc), stream: providerBloc.formLoginStream,),
+				SizedBox(height: 20),
+				Container(alignment: Alignment.centerRight,child: Text('¿Perdió su contraseña?', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500))),
+			],
 		);
 	}
 
 	
-	void _onPressedLogin(PatternBloc loginBloc) async {
-		try{
+	void _onPressedLogin(LoginBloc loginBloc) async {
+		try {
 			setState(() { showLoading = true; });
 			UserProvider userProvider = UserProvider();
 			Map<String, dynamic> response = await userProvider.usersLogin(user: loginBloc.emailLastValue, password: loginBloc.passwordLastValue);
 			setState(() { showLoading = false; });
 			if (response["ok"] == true){
-				Navigator.pushNamed(context, HomePage.routeName);
+				Navigator.pushReplacementNamed(context, HomePage.routeName);
 			} else {
 				AlertWidgets.alertOkWidget(context, 'Error', 'Ocurrió un error, vuelva a intentarlo!', Icon(Icons.error));
 			}		

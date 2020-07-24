@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_login_signup/src/blocs/provider_bloc.dart';
 import 'package:flutter_login_signup/src/models/user_model.dart';
 import 'package:flutter_login_signup/src/providers/users_provider.dart';
 import 'package:flutter_login_signup/src/widgets/alert_widgets.dart';
@@ -71,11 +72,19 @@ class _UsersCreatePageState extends State<UsersCreatePage> {
 
 
   	Widget _formWidget() {
+		final providerBloc = ProviderBloc.of(context);
+
     	return Form(
 			key: formKey,
 			child: Column(
 				children: <Widget>[
-					TextFormFieldWidget(title: "Nombre", onSavedFunction: _onSavedName, enabled: true, initialValue: '', textInputType: TextInputType.text),
+					TextFormFieldWidget(
+						title: "Nombre", 
+						onSavedFunction: _onSavedName, 
+						enabled: true, 
+						textInputType: TextInputType.text
+										
+					),
 					SizedBox(height: 10,),
 					TextFormFieldWidget(title: "Apellido", onSavedFunction: _onSavedLastName, enabled: true, initialValue: '', textInputType: TextInputType.text),
 					SizedBox(height: 10),
@@ -84,7 +93,6 @@ class _UsersCreatePageState extends State<UsersCreatePage> {
 					TextFormFieldWidget(title: "Teléfono", onSavedFunction: _onSavedPhone, enabled: true, initialValue: '', textInputType: TextInputType.phone),
 					SizedBox(height: 10,),
 					newUser.userType == 'customer' ? TextFormFieldWidget(title: "Tipo de usuario", enabled: false, initialValue: 'Cliente', textInputType: TextInputType.text) : _dropDownField() ,
-
 					SizedBox(height: 20,),
 					ButtonWidget(title: 'Crear',  border: Colors.white, colorStart: Color(0xfffbb448), colorEnd: Color(0xfff7892b), colorText: Colors.white, onPressedFunction: _onTapButton, )
 				],
