@@ -16,15 +16,11 @@ class ProviderBloc extends InheritedWidget {
   	}
 
   	
-
-
   	final loginBloc = LoginBloc();
-
 
  
   	@override
   	bool updateShouldNotify(InheritedWidget oldWidget) => true;
-
   	
 
 	static LoginBloc of ( BuildContext context ){
