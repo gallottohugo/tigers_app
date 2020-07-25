@@ -11,8 +11,7 @@ class LoginBloc with ValidatorsBloc {
 	final _emailController    = BehaviorSubject<String>();
   	final _passwordController = BehaviorSubject<String>();
 	
-
-
+	
   	// Get data from Stream
 	Stream<String> get emailStream     =>  _emailController.stream.transform(validateEmail); //validateEmail from mixin ValidatorsBloc
   	Stream<String> get passwordStream  =>  _passwordController.stream.transform(validatePassword); //validatePassword from mixin ValidatorsBloc
