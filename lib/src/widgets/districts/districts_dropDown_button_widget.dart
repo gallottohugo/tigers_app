@@ -19,17 +19,21 @@ class _DistrictsDropDownButtonWidgetState extends State<DistrictsDropDownButtonW
   	Widget build(BuildContext context) {
 		return FutureBuilder(
 			future: districtsProvider.districtsList(),
-			initialData: null,
 			builder: (BuildContext context, AsyncSnapshot<List<DistrictModel>> snapshot) {
 				if (snapshot.hasData){
-					if (snapshot.data.first.name != ''){
-						DistrictModel districtModel = DistrictModel();
-						districtModel.id = 0;
-						districtModel.name= '';
-						snapshot.data.insert(0, districtModel);
+					if (snapshot.data.length == 0)
+					{
+						return Container();
+					} else {
+						if (snapshot.data.first.name != ''){
+							DistrictModel districtModel = DistrictModel();
+							districtModel.id = 0;
+							districtModel.name= '';
+							snapshot.data.insert(0, districtModel);
+						}
+						districtList = snapshot.data;
+						return _dropDownField(districtList);
 					}
-					districtList = snapshot.data;
-					return _dropDownField(districtList);
 				} else {
 					return AbsorbPointer(
 						child: BackdropFilter(
