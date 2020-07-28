@@ -5,13 +5,13 @@ class TextFormFieldWidget extends StatefulWidget {
 	final String title;
 	final String initialValue;
 	final bool enabled;
+	final bool obscureText;
+	final TextInputType textInputType;
+	final TextEditingController controller;
 	final Function onSavedFunction;
   	final Function onTapFunction;
 	final Function onChangedFunction;
-	final TextInputType textInputType;
-	final bool obscureText;
-	final TextEditingController controller;
-	final Stream stream;
+	final Function validator;
 
   	TextFormFieldWidget({
 		Key key, 
@@ -24,7 +24,7 @@ class TextFormFieldWidget extends StatefulWidget {
 		this.onTapFunction, 
 		this.onChangedFunction, 
 		this.controller,
-		this.stream}) : super(key: key);
+		this.validator}) : super(key: key);
   	_TextFormFieldWidgetState createState() => _TextFormFieldWidgetState();
 }
 
@@ -32,37 +32,32 @@ class TextFormFieldWidget extends StatefulWidget {
 class _TextFormFieldWidgetState extends State<TextFormFieldWidget> {
   	@override
   	Widget build(BuildContext context) {
-		return StreamBuilder(
-		  	stream: widget.stream ,
-		  	builder: (BuildContext context, AsyncSnapshot snapshot){
-				  return Container(
-					margin: EdgeInsets.symmetric(vertical: 10),
-					child: Column(
-						crossAxisAlignment: CrossAxisAlignment.start,
-						children: <Widget>[
-							Text(widget.title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),),
-							SizedBox(height: 10,),
-							TextFormField(
-								decoration: InputDecoration(
-									border: InputBorder.none,
-									fillColor: Color(0xfff3f3f4),
-									filled: true,
-									//counterText: snapshot.data
-									errorText: snapshot.error
-								),
-								keyboardType: widget.textInputType,
-								onSaved: widget.onSavedFunction,
-								initialValue: widget.initialValue,
-								enabled: widget.enabled,
-								obscureText: widget.obscureText,
-								onTap: widget.onTapFunction,
-								onChanged: widget.onChangedFunction,
-								controller: widget.controller,
-							)
-						],
-					),
-				);
-		  	},
+		return Container(
+			margin: EdgeInsets.symmetric(vertical: 10),
+			child: Column(
+				crossAxisAlignment: CrossAxisAlignment.start,
+				children: <Widget>[
+					Text(widget.title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),),
+					SizedBox(height: 10,),
+					TextFormField(
+						decoration: InputDecoration(
+							border: InputBorder.none,
+							fillColor: Color(0xfff3f3f4),
+							filled: true,
+						),
+						keyboardType: widget.textInputType,
+						onSaved: widget.onSavedFunction,
+						initialValue: widget.initialValue,
+						enabled: widget.enabled,
+						obscureText: widget.obscureText,
+						onTap: widget.onTapFunction,
+						onChanged: widget.onChangedFunction,
+						controller: widget.controller,
+						validator: widget.validator,
+					)
+				],
+			),
 		);
+		  	
   	}
 }
