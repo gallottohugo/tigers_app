@@ -24,31 +24,6 @@ class ValidatorsBloc {
     	}
   	);
 
-	final validateName = StreamTransformer<String, String>.fromHandlers(
-    	handleData: ( name, sink ) {
-			sink.add(name);
-		}
-	);
-
-
-	final validateLastName = StreamTransformer<String, String>.fromHandlers(
-    	handleData: ( lastName, sink ) {
-			sink.add(lastName);
-		}
-	);
-
-
-	final validatePhone = StreamTransformer<String, String>.fromHandlers(
-    	handleData: ( phone, sink ) {
-			sink.add(phone);
-		}
-	);
-
-
-	final validateCustomer = StreamTransformer<String, String>.fromHandlers(
-    	handleData: ( customer, sink ) {
-			sink.add(customer);
-		}
-	);
+	
 	
 }
