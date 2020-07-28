@@ -16,9 +16,9 @@ class HouseModel {
 
 	HouseModel({
 		this.id,
-		this.address,
-		this.addressNumber,
-		this.city,
+		this.address = '',
+		this.addressNumber = 0,
+		this.city = '',
 		this.districtId,
 		this.customerId,
 	});
