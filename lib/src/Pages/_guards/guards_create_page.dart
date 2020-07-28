@@ -4,6 +4,7 @@ import 'package:flutter_login_signup/src/models/user_model.dart';
 import 'package:flutter_login_signup/src/pages/users/users_list_page.dart';
 import 'package:flutter_login_signup/src/providers/guards_provider.dart';
 import 'package:flutter_login_signup/src/styles/colors.dart';
+import 'package:flutter_login_signup/src/utils/validators.dart';
 import 'package:flutter_login_signup/src/widgets/Districts/districts_dropDown_button_widget.dart';
 import 'package:flutter_login_signup/src/widgets/alert_widgets.dart';
 import 'package:flutter_login_signup/src/widgets/app_bar_widget.dart';
@@ -25,6 +26,7 @@ class _GuardsCreatePageState extends State<GuardsCreatePage> {
 	GuardModel newGuard = GuardModel();
 	TextEditingController controllerDate = TextEditingController();
 	List<UserModel> employees = List<UserModel>();
+	String employeesMsg = '';
 
 
 	void handleDistrictDropdownValue(int newValue){
@@ -34,10 +36,20 @@ class _GuardsCreatePageState extends State<GuardsCreatePage> {
 
 	void handleAddEmployee(UserModel userModel){
 		employees.add(userModel);
+		_setEmployeesMsg();
 	}
 
 	void handleRemoveEmployee(UserModel userModel){
 		employees.remove(userModel);
+		_setEmployeesMsg();
+	}
+
+
+	void _setEmployeesMsg(){
+		setState(() {
+			if (employees.length == 0){employeesMsg = 'Debe ingresar al menos un empleado';}
+			else {employeesMsg = '';}
+		});
 	}
 
 
@@ -80,6 +92,14 @@ class _GuardsCreatePageState extends State<GuardsCreatePage> {
 
 
 	void _onTapButton() async {
+		if (!formKey.currentState.validate()) return null;
+		if (employees.length == 0){
+			_setEmployeesMsg();
+			return null;
+		} else{
+			setState(() { employeesMsg = '';});
+		}
+
 		setState(() { showLoading = true; });
 		formKey.currentState.save();
 		GuardsProvider guardsProvider = GuardsProvider();
@@ -98,17 +118,19 @@ class _GuardsCreatePageState extends State<GuardsCreatePage> {
 			key: formKey,
 			child: Column(
 				children: <Widget>[
-					TextFormFieldWidget(title: 'Fecha', enabled: true, obscureText: false, onSavedFunction: _onSavedDate, textInputType: TextInputType.text, onTapFunction: _onTapDate, controller: controllerDate,),
+					TextFormFieldWidget(title: 'Fecha', enabled: true, obscureText: false, onSavedFunction: _onSavedDate, textInputType: TextInputType.text, onTapFunction: _onTapDate, controller: controllerDate, validator: Validators.validateDate,),
 					SizedBox(height: 20,),
-					TextFormFieldWidget(title: 'Hora inicio', enabled: true, initialValue: '', obscureText: false, onSavedFunction: _onSavedStart, textInputType: TextInputType.number,),
+					TextFormFieldWidget(title: 'Hora inicio', enabled: true, initialValue: '', obscureText: false, onSavedFunction: _onSavedStart, textInputType: TextInputType.number, validator: Validators.validateStartHour,),
 					SizedBox(height: 20,),
-					TextFormFieldWidget(title: 'Hora fin', enabled: true, initialValue: '', obscureText: false, onSavedFunction: _onSavedEnd, textInputType: TextInputType.number,),
-					SizedBox(height: 20,),
+					/*TextFormFieldWidget(title: 'Hora fin', enabled: true, initialValue: '', obscureText: false, onSavedFunction: _onSavedEnd, textInputType: TextInputType.number,),
+					SizedBox(height: 20,),*/
 					DistrictsDropDownButtonWidget(handleDistrictDropdownValue: handleDistrictDropdownValue,),
 					SizedBox(height: 20,),
 					Divider(color: TigerColors.orange, thickness: 2,),
 					SizedBox(height: 20,),
 					AddEmployeesWidget(handleAddEmployee: handleAddEmployee, handleRemoveEmployee: handleRemoveEmployee,),
+					SizedBox(height: 10,),
+					Text(employeesMsg, style: TextStyle(color: Colors.red),),
 					SizedBox(height: 20,),
 					Divider(color: TigerColors.orange, thickness: 2,),
 					SizedBox(height: 20,),
@@ -122,7 +144,7 @@ class _GuardsCreatePageState extends State<GuardsCreatePage> {
 
 	void _onSavedDate(String value){ newGuard.date = value; }
 	void _onSavedStart(String value){ newGuard.start = int.parse(value); }
-	void _onSavedEnd(String value){ newGuard.end = int.parse(value); }
+	//void _onSavedEnd(String value){ newGuard.end = int.parse(value); }
 	void _onTapDate() async {
 		FocusScope.of(context).requestFocus(FocusNode());
 		DateTime date = await _datePicker(context);
