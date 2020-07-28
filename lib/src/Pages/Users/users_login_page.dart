@@ -6,9 +6,9 @@ import 'package:flutter_login_signup/src/pages/home/home_page.dart';
 import 'package:flutter_login_signup/src/widgets/alert_widgets.dart';
 import 'package:flutter_login_signup/src/widgets/app_bar_widget.dart';
 import 'package:flutter_login_signup/src/widgets/bezierContainer.dart';
-import 'package:flutter_login_signup/src/widgets/button_widget.dart';
+import 'package:flutter_login_signup/src/widgets/button_bloc_widget.dart';
 import 'package:flutter_login_signup/src/widgets/progress_indicator_widget.dart';
-import 'package:flutter_login_signup/src/widgets/text_form_field_widget.dart';
+import 'package:flutter_login_signup/src/widgets/text_form_field_bloc_widget.dart';
 
 
 class UsersLoginPage extends StatefulWidget {
@@ -64,11 +64,11 @@ class _UsersLoginPageState extends State<UsersLoginPage> {
 			children: <Widget>[
 				SizedBox(height: height * .2),
 				SizedBox(height: 80),
-				TextFormFieldWidget(title: 'Correo electrónico', enabled: true, initialValue: '', obscureText: false, textInputType: TextInputType.emailAddress, stream: providerBloc.emailStream, onChangedFunction: providerBloc.changeEmail,),
+				TextFormFieldBlocWidget(title: 'Correo electrónico', enabled: true, initialValue: '', obscureText: false, textInputType: TextInputType.emailAddress, stream: providerBloc.emailStream, onChangedFunction: providerBloc.changeEmail,),
 				SizedBox(height: 20),
-				TextFormFieldWidget(title: 'Contraseña', enabled: true, obscureText: true,  textInputType: TextInputType.text, stream: providerBloc.passwordStream, onChangedFunction: providerBloc.changePassword,),
+				TextFormFieldBlocWidget(title: 'Contraseña', enabled: true, obscureText: true,  textInputType: TextInputType.text, stream: providerBloc.passwordStream, onChangedFunction: providerBloc.changePassword,),
 				SizedBox(height: 20),
-				ButtonWidget(border: Colors.white, title: 'Iniciar sesión', colorStart: Color(0xfffbb448), colorEnd: Color(0xfff7892b),  colorText: Colors.white,  onPressedFunction: ()=> _onPressedLogin(providerBloc), stream: providerBloc.formLoginStream,),
+				ButtonBlocWidget(border: Colors.white, title: 'Iniciar sesión', colorStart: Color(0xfffbb448), colorEnd: Color(0xfff7892b),  colorText: Colors.white,  onPressedFunction: ()=> _onPressedLogin(providerBloc), stream: providerBloc.formLoginStream,),
 				SizedBox(height: 20),
 				Container(alignment: Alignment.centerRight,child: Text('¿Perdió su contraseña?', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500))),
 			],
