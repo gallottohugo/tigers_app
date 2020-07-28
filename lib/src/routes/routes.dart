@@ -24,12 +24,15 @@ class ApplicationRoutes {
 			UsersCustomersListPage.routeName : (BuildContext context) => UsersCustomersListPage(),
 			UsersListPage.routeName : (BuildContext context) => UsersListPage(),
 			
-			//houses
-			HousesCreatePage.routeName : (BuildContext context) => HousesCreatePage(),
-
 			//districts
 			DistrictsCreatePage.routeName : (BuildContext context) => DistrictsCreatePage(),
 			DistrictsListPage.routeName : (BuildContext context) => DistrictsListPage(),
+			
+			
+			//houses
+			HousesCreatePage.routeName : (BuildContext context) => HousesCreatePage(),
+
+			
 
 			//guards
 			GuardsCreatePage.routeName : (BuildContext context) => GuardsCreatePage(),
