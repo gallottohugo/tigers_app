@@ -82,11 +82,11 @@ class _HousesCreatePageState extends State<HousesCreatePage> {
 			key: formKey,
 			child: Column(
 				children: <Widget>[
-					TextFormFieldWidget(title: 'Dirección', enabled: true, initialValue: '', obscureText: false, onSavedFunction: _onSavedAddress, textInputType: TextInputType.text,),
+					TextFormFieldWidget(title: 'Dirección', enabled: true, initialValue: newHouse.address, obscureText: false, onSavedFunction: _onSavedAddress, textInputType: TextInputType.text, validator: _validatorAddress,),
 					SizedBox(height: 10,),
-					TextFormFieldWidget(title: 'Número', enabled: true, initialValue: '', obscureText: false, onSavedFunction: _onSavedAddressNumber, textInputType: TextInputType.number,),
+					TextFormFieldWidget(title: 'Número', enabled: true, initialValue: newHouse.addressNumber.toString(), obscureText: false, onSavedFunction: _onSavedAddressNumber, textInputType: TextInputType.number, validator: _validatorAddressNumber,),
 					SizedBox(height: 10,),
-					TextFormFieldWidget(title: 'Ciudad', enabled: true, initialValue: '', obscureText: false, onSavedFunction: _onSavedCity, textInputType: TextInputType.text,),
+					TextFormFieldWidget(title: 'Ciudad', enabled: true, initialValue: newHouse.city, obscureText: false, onSavedFunction: _onSavedCity, textInputType: TextInputType.text, validator: _validatorCity,),
 					SizedBox(height: 10,),
 					DistrictsDropDownButtonWidget(handleDistrictDropdownValue: handleDistrictDropdownValue,),
 					SizedBox(height: 20,),
@@ -100,23 +100,34 @@ class _HousesCreatePageState extends State<HousesCreatePage> {
 	void _onSavedAddressNumber(String value){ newHouse.addressNumber = int.parse(value) ; }
 	void _onSavedCity(String value){ newHouse.city = value; }
 
-	void _onTapButton() async {
-		setState(() { showLoading = true; });
-		formKey.currentState.save();
-		HousesProvider housesProvider = HousesProvider();
-		Map<String, dynamic> response = await housesProvider.housesCreate(house: newHouse);
-		setState(() { showLoading = false; });
-		if(response["ok"] == true){
-			Navigator.pop(context);
-		} else {
-			AlertWidgets.alertOkWidget(context, 'Error', response["message"], Icon(Icons.error));
+
+	String _validatorAddress(String value){ return null; }
+	String _validatorCity(String value){ return null;}
+	String _validatorAddressNumber(String value){
+		if (value.isEmpty){ return 'Debe ingresar un número';
+		} else { 
+			if ( num.tryParse(value) == null || num.tryParse(value) == 0 ){ return 'Debe ingresar un número';
+			} else {return null;  }
 		}
 	}
 
-
-
 	
-
+	void _onTapButton() async {
+		if (formKey.currentState.validate()){
+			return null;
+		} else {
+			setState(() { showLoading = true; });
+			formKey.currentState.save();
+			HousesProvider housesProvider = HousesProvider();
+			Map<String, dynamic> response = await housesProvider.housesCreate(house: newHouse);
+			setState(() { showLoading = false; });
+			if(response["ok"] == true){
+				Navigator.pop(context);
+			} else {
+				AlertWidgets.alertOkWidget(context, 'Error', response["message"], Icon(Icons.error));
+			}
+		}
+	}
 }
 
 
