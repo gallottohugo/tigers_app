@@ -1,8 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_login_signup/src/blocs/provider_bloc.dart';
 import 'package:flutter_login_signup/src/models/user_model.dart';
 import 'package:flutter_login_signup/src/providers/users_provider.dart';
+import 'package:flutter_login_signup/src/utils/validators.dart';
 import 'package:flutter_login_signup/src/widgets/alert_widgets.dart';
 import 'package:flutter_login_signup/src/widgets/app_bar_widget.dart';
 import 'package:flutter_login_signup/src/widgets/bezierContainer.dart';
@@ -63,7 +63,7 @@ class _UsersCreatePageState extends State<UsersCreatePage> {
 
 	Widget _appBarTiger({Widget leading}){
 		return PreferredSize(
-			preferredSize: Size.fromHeight(60.0), // here the desired height
+			preferredSize: Size.fromHeight(60.0),
 			child: AppBarTiger(title: newUser.userType == 'customer' ? 'Crear cliente' : 'Crear usuario', leading: leading,)
 		);
 	}
@@ -72,29 +72,21 @@ class _UsersCreatePageState extends State<UsersCreatePage> {
 
 
   	Widget _formWidget() {
-		final providerBloc = ProviderBloc.of(context);
-
     	return Form(
 			key: formKey,
 			child: Column(
 				children: <Widget>[
-					TextFormFieldWidget(
-						title: "Nombre", 
-						onSavedFunction: _onSavedName, 
-						enabled: true, 
-						textInputType: TextInputType.text
-										
-					),
+					TextFormFieldWidget(title: "Nombre", onSavedFunction: _onSavedName,  enabled: true,  textInputType: TextInputType.text, validator: _validatorName,),
 					SizedBox(height: 10,),
-					TextFormFieldWidget(title: "Apellido", onSavedFunction: _onSavedLastName, enabled: true, initialValue: '', textInputType: TextInputType.text),
+					TextFormFieldWidget(title: "Apellido", onSavedFunction: _onSavedLastName, enabled: true, initialValue: newUser.name, textInputType: TextInputType.text, validator: _validatorLastName,),
 					SizedBox(height: 10),
-					TextFormFieldWidget(title: "Email", onSavedFunction: _onSavedEmail, enabled: true, initialValue: '', textInputType: TextInputType.emailAddress),
+					TextFormFieldWidget(title: "Email", onSavedFunction: _onSavedEmail, enabled: true, initialValue: newUser.lastName, textInputType: TextInputType.emailAddress, validator: _validatorEmail,),
 					SizedBox(height: 10,),
-					TextFormFieldWidget(title: "Teléfono", onSavedFunction: _onSavedPhone, enabled: true, initialValue: '', textInputType: TextInputType.phone),
+					TextFormFieldWidget(title: "Teléfono", onSavedFunction: _onSavedPhone, enabled: true, initialValue: newUser.phone, textInputType: TextInputType.phone, validator: _validatorPhone,),
 					SizedBox(height: 10,),
 					newUser.userType == 'customer' ? TextFormFieldWidget(title: "Tipo de usuario", enabled: false, initialValue: 'Cliente', textInputType: TextInputType.text) : _dropDownField() ,
 					SizedBox(height: 20,),
-					ButtonWidget(title: 'Crear',  border: Colors.white, colorStart: Color(0xfffbb448), colorEnd: Color(0xfff7892b), colorText: Colors.white, onPressedFunction: _onTapButton, )
+					ButtonWidget(title: 'Crear',  border: Colors.white, colorStart: Color(0xfffbb448), colorEnd: Color(0xfff7892b), colorText: Colors.white, onPressedFunction: _onPressedFunction, )
 				],
 			)
     	);
@@ -107,7 +99,19 @@ class _UsersCreatePageState extends State<UsersCreatePage> {
 	void _onSavedPhone(String value){ newUser.phone = value; }
 
 
-	void _onTapButton() async {
+	
+
+
+	String _validatorName(String value){ return Validators.validateName(value); }
+	String _validatorLastName(String value){ return Validators.validateLastName(value); }
+	String _validatorEmail(String value){ return Validators.validateEmail(value); }
+	String _validatorPhone(String value){ return Validators.validatePhone(value); }
+
+
+
+
+	void _onPressedFunction() async {
+		if (!formKey.currentState.validate()) return null;		
 		setState(() { showLoading = true; });
 		formKey.currentState.save();
 		UserProvider userProvider = UserProvider();
