@@ -23,11 +23,11 @@ class UserModel {
 		this.id,
 		this.token,
 		this.admin,
-		this.name,
-		this.lastName,
-		this.email,
+		this.name = '',
+		this.lastName = '',
+		this.email = '',
 		this.userType,
-		this.phone,
+		this.phone = '',
 	});
 
 	String userTypeES(){
