@@ -22,19 +22,17 @@ void main() async {
 		signin = true;
 		UserModel.setCurrentUserValues();
 	}
-	runApp(MyApp(signIn: signin,));
+	runApp(TigersApp(signIn: signin,));
 }
 
-class MyApp extends StatelessWidget {
+class TigersApp extends StatelessWidget {
   	final bool signIn;
-	MyApp({@required this.signIn});
+	TigersApp({@required this.signIn});
 
   	@override
   	Widget build(BuildContext context) {
-		  
     	final textTheme = Theme.of(context).textTheme;
 		SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Color(0xffe46b10),));
-
 		return ProviderBloc(
 			child: MaterialApp(
 				title: 'Grupo Tigre',
@@ -51,6 +49,5 @@ class MyApp extends StatelessWidget {
 				supportedLocales: [ const Locale('en','US'), const Locale('es','ES'),],
 			),
 		);
-			
 	}
 }
