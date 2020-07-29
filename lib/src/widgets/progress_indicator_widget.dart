@@ -8,7 +8,7 @@ class ProgressIndicatorWidget extends StatelessWidget {
   	@override
   	Widget build(BuildContext context) {
 		return Container(
-			padding: EdgeInsets.only(top: 20),
+			padding: EdgeInsets.only(top: 20, bottom: 20),
 			child: Center(
 					child: CircularProgressIndicator(
 					backgroundColor: Colors.transparent,
@@ -16,21 +16,5 @@ class ProgressIndicatorWidget extends StatelessWidget {
 				)
 			)
 		);
-		/*return Container(
-		  child: AbsorbPointer(
-		  	child: BackdropFilter(
-		  		filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-		  		child: Container(
-		  			padding: EdgeInsets.only(top: 20),
-		  			child: Center(
-		  					child: CircularProgressIndicator(
-		  					backgroundColor: Colors.transparent,
-		  					valueColor: new AlwaysStoppedAnimation<Color>(Color(0xffe46b10)),
-		  				)
-		  			)
-		  		)
-		  	)
-		  ),
-		);*/
   	}
 }
