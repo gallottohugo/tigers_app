@@ -7,7 +7,7 @@ import 'package:flutter_login_signup/src/widgets/alert_widgets.dart';
 import 'package:flutter_login_signup/src/widgets/app_bar_widget.dart';
 import 'package:flutter_login_signup/src/widgets/bezierContainer.dart';
 import 'package:flutter_login_signup/src/widgets/button_bloc_widget.dart';
-import 'package:flutter_login_signup/src/widgets/progress_indicator_widget.dart';
+import 'package:flutter_login_signup/src/widgets/progress_indicator_page_widget.dart';
 import 'package:flutter_login_signup/src/widgets/text_form_field_bloc_widget.dart';
 
 
@@ -40,7 +40,7 @@ class _UsersLoginPageState extends State<UsersLoginPage> {
 									child: _loginForm(height)
 								),
 							),
-							showLoading == true ? ProgressIndicatorWidget() : Container()
+							showLoading == true ? ProgressIndicatorPageWidget() : Container()
 						],
 					),
 				)
