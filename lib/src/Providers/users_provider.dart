@@ -30,8 +30,12 @@ class UserProvider {
 
 				UserModel.setCurrentUserValues();
 				return { 'ok': true };
-			} else { return { 'ok': false }; }	
-		} catch (exception){ return { 'ok': false }; }
+			} else { 
+				return { 'ok': false }; 
+			}	
+		} catch (exception){ 
+			return { 'ok': false }; 
+		}
 	}
 
 
