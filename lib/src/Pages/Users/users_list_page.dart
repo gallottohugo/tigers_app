@@ -53,6 +53,7 @@ class _UsersListPageState extends State<UsersListPage> {
 										SearchWidget(onChanged: _onChanged),
 										SizedBox(height: 30,),
 										firstTime ? _users() : ColumnUser(userModelList: usersListFiltered, fromSearchEmployee: this.fromSearchEmployee,),
+										SizedBox(height: 20,)
 									]
 								)
 							)
