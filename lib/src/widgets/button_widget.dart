@@ -20,6 +20,8 @@ class ButtonWidget extends StatelessWidget {
   	Widget build(BuildContext context) {	
 		return RaisedButton(
 			elevation: 0,
+			highlightElevation: 0,
+			highlightColor: Colors.transparent,
 			color: Colors.transparent,
 			disabledColor: Colors.transparent,
 			child: Container(
