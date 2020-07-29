@@ -7,6 +7,7 @@ import 'package:flutter_login_signup/src/widgets/alert_widgets.dart';
 import 'package:flutter_login_signup/src/widgets/app_bar_widget.dart';
 import 'package:flutter_login_signup/src/widgets/bezierContainer.dart';
 import 'package:flutter_login_signup/src/widgets/button_widget.dart';
+import 'package:flutter_login_signup/src/widgets/progress_indicator_page_widget.dart';
 import 'package:flutter_login_signup/src/widgets/progress_indicator_widget.dart';
 import 'package:flutter_login_signup/src/widgets/text_form_field_widget.dart';
 
@@ -52,7 +53,7 @@ class _UsersCreatePageState extends State<UsersCreatePage> {
                 				),
               				),
             			),
-						showLoading == true ? ProgressIndicatorWidget() : Container()
+						showLoading == true ? ProgressIndicatorPageWidget() : Container()
           			],
         		),
       		),
@@ -111,7 +112,8 @@ class _UsersCreatePageState extends State<UsersCreatePage> {
 
 
 	void _onPressedFunction() async {
-		if (!formKey.currentState.validate()) return null;		
+		if (!formKey.currentState.validate()) return null;	
+
 		setState(() { showLoading = true; });
 		formKey.currentState.save();
 		UserProvider userProvider = UserProvider();
@@ -122,7 +124,7 @@ class _UsersCreatePageState extends State<UsersCreatePage> {
 			if (newUser.userType == 'customer'){
 				Navigator.pop(context);
 			} else {
-				await AlertWidgets.alertOkWidget(context, 'Usuario creado', 'El usuario se creó correctamente', Icon(Icons.check_circle));
+				await AlertWidgets.alertOkWidget(context, 'Usuario creado', 'El usuario se creó correctamente', Icon(Icons.check_circle, color: Colors.green,));
 				Navigator.pop(context);
 			}
 		} else {
