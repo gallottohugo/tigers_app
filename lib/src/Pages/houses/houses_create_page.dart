@@ -8,7 +8,7 @@ import 'package:flutter_login_signup/src/widgets/alert_widgets.dart';
 import 'package:flutter_login_signup/src/widgets/app_bar_widget.dart';
 import 'package:flutter_login_signup/src/widgets/bezierContainer.dart';
 import 'package:flutter_login_signup/src/widgets/button_widget.dart';
-import 'package:flutter_login_signup/src/widgets/progress_indicator_widget.dart';
+import 'package:flutter_login_signup/src/widgets/progress_indicator_page_widget.dart';
 import 'package:flutter_login_signup/src/widgets/text_form_field_widget.dart';
 
 class HousesCreatePage extends StatefulWidget {
@@ -60,7 +60,7 @@ class _HousesCreatePageState extends State<HousesCreatePage> {
                 				),
               				),
             			),
-						showLoading == true ? ProgressIndicatorWidget() : Container()
+						showLoading == true ? ProgressIndicatorPageWidget() : Container()
           			],
         		),
       		),
