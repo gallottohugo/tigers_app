@@ -90,7 +90,7 @@ class _HousesCreatePageState extends State<HousesCreatePage> {
 					SizedBox(height: 10,),
 					DistrictsDropDownButtonWidget(handleDistrictDropdownValue: handleDistrictDropdownValue,),
 					SizedBox(height: 20,),
-					ButtonWidget(title: 'Crear', border: Colors.white, colorStart: Color(0xfffbb448), colorEnd: Color(0xfff7892b), colorText: Colors.white, onPressedFunction: _onTapButton,)
+					ButtonWidget(title: 'Crear', border: Colors.white, colorStart: Color(0xfffbb448), colorEnd: Color(0xfff7892b), colorText: Colors.white, onPressedFunction: _onPressedButton,)
 				],
 			)
     	);
@@ -104,29 +104,29 @@ class _HousesCreatePageState extends State<HousesCreatePage> {
 	String _validatorAddress(String value){ return null; }
 	String _validatorCity(String value){ return null;}
 	String _validatorAddressNumber(String value){
-		if (value.isEmpty){ return 'Debe ingresar un número';
+		if (value.isEmpty){ 
+			return 'Debe ingresar un número';
 		} else { 
-			if ( num.tryParse(value) == null || num.tryParse(value) == 0 ){ return 'Debe ingresar un número';
-			} else {return null;  }
+			if ( num.tryParse(value) == null || num.tryParse(value) == 0 ){ 
+				return 'Debe ingresar un número';
+			} else {
+				return null;  
+			}
 		}
 	}
 
 	
-	void _onTapButton() async {
-		if (formKey.currentState.validate()){
-			return null;
-		} else {
-			setState(() { showLoading = true; });
-			formKey.currentState.save();
-			HousesProvider housesProvider = HousesProvider();
-			Map<String, dynamic> response = await housesProvider.housesCreate(house: newHouse);
-			setState(() { showLoading = false; });
-			if(response["ok"] == true){
-				Navigator.pop(context);
-			} else {
-				AlertWidgets.alertOkWidget(context, 'Error', response["message"], Icon(Icons.error));
-			}
-		}
+	void _onPressedButton() async {
+		if (!formKey.currentState.validate()) return null;
+			
+		setState(() { showLoading = true; });
+		formKey.currentState.save();
+		HousesProvider housesProvider = HousesProvider();
+		Map<String, dynamic> response = await housesProvider.housesCreate(house: newHouse);
+		setState(() { showLoading = false; });
+		if(response["ok"] == true){ Navigator.pop(context);} 
+		else { AlertWidgets.alertOkWidget(context, 'Error', response["message"], Icon(Icons.error)); }
+		
 	}
 }
 
